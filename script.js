@@ -179,22 +179,22 @@
         }
 
         state.pageFlip = new St.PageFlip(elements.flipbook, {
-            width: 550,
-            height: 778,
+            width: 500,
+            height: 707,
             size: 'stretch',
-            minWidth: 280,
-            maxWidth: 850,
-            minHeight: 396,
-            maxHeight: 1202,
+            minWidth: 240,
+            maxWidth: 800,
+            minHeight: 339,
+            maxHeight: 1131,
             maxShadowOpacity: 0.45,
             showCover: true,
-            mobileScrollSupport: false,
+            mobileScrollSupport: true,
             usePortrait: true,
             startPage: 0,
             drawShadow: true,
-            flippingTime: 700,
+            flippingTime: 650,
             useMouseEvents: true,
-            swipeDistance: 25,
+            swipeDistance: 30,
             clickEventForward: true
         });
 
@@ -223,7 +223,7 @@
      * Mencegah event seret flipbook saat berinteraksi dengan input, textarea, dan label
      */
     function preventFlipConflictOnInputs() {
-        const interactives = document.querySelectorAll('input, textarea, button, select, label, .lkpd-table');
+        const interactives = document.querySelectorAll('input, textarea, button, select, label, .lkpd-table, .quiz-opt-label');
         interactives.forEach(function (el) {
             el.addEventListener('mousedown', function (e) {
                 e.stopPropagation();
