@@ -1,31 +1,101 @@
 /**
  * Flipbook LKPD - Evaluasi Pemahaman Materi Teks Diskusi
- * Vanilla JavaScript dengan PDF.js dan StPageFlip
+ * Format Isi HTML & CSS Interaktif dengan Fitur Kuis
  * Aturan: Tanpa Emoji dan Tanpa Karakter Em Dash
  */
 
 (function () {
     'use strict';
 
-    // Konfigurasi & State
+    // Konfigurasi & Kunci Jawaban Kuis
     const CONFIG = {
-        pdfPath: 'assets/modul.pdf',
         totalPages: 8,
-        renderScale: 2.0, // Render resolusi tinggi untuk ketajaman teks
         zoomLevels: [0.8, 1.0, 1.25, 1.5, 1.75, 2.0],
-        defaultZoomIndex: 1
+        defaultZoomIndex: 1,
+        storageKey: 'lkpd_teks_diskusi_state',
+        quizQuestions: [
+            {
+                id: 1,
+                name: 'quiz_q1',
+                correct: 'B',
+                points: 20,
+                question: 'Ciri utama teks diskusi adalah ....',
+                options: [
+                    { val: 'A', text: 'memuat satu pendapat tanpa pendapat lain' },
+                    { val: 'B', text: 'memuat berbagai sudut pandang terhadap suatu permasalahan' },
+                    { val: 'C', text: 'bertujuan menghibur pembaca dengan cerita' },
+                    { val: 'D', text: 'berisi urutan langkah melakukan sesuatu' }
+                ],
+                explanation: 'Ciri utama teks diskusi adalah menyajikan dan memuat berbagai sudut pandang (pro dan kontra) terhadap suatu isu permasalahan yang aktual.'
+            },
+            {
+                id: 2,
+                name: 'quiz_q2',
+                correct: 'C',
+                points: 20,
+                question: 'Isu yang dibahas dalam teks stimulus adalah ....',
+                options: [
+                    { val: 'A', text: 'manfaat media sosial bagi remaja' },
+                    { val: 'B', text: 'cara mencegah perundungan di sekolah' },
+                    { val: 'C', text: 'perlu tidaknya siswa membawa ponsel ke sekolah' },
+                    { val: 'D', text: 'penggunaan internet di rumah' }
+                ],
+                explanation: 'Teks stimulus berfokus pada isu perdebatan mengenai perlu tidaknya siswa diizinkan membawa ponsel ke lingkungan sekolah.'
+            },
+            {
+                id: 3,
+                name: 'quiz_q3',
+                correct: 'C',
+                points: 20,
+                question: 'Pernyataan berikut yang termasuk argumen pendukung (pro) adalah ....',
+                options: [
+                    { val: 'A', text: 'Siswa dapat menyontek saat ujian.' },
+                    { val: 'B', text: 'Perhatian siswa terpecah oleh media sosial.' },
+                    { val: 'C', text: 'Ponsel memudahkan siswa mencari referensi dan kamus daring.' },
+                    { val: 'D', text: 'Perundungan daring meningkat di sekolah.' }
+                ],
+                explanation: 'Pernyataan bahwa ponsel memudahkan siswa mencari referensi dan kamus daring merupakan argumen yang mendukung (pro) pemanfaatan ponsel sebagai sarana belajar.'
+            },
+            {
+                id: 4,
+                name: 'quiz_q4',
+                correct: 'B',
+                points: 20,
+                question: 'Makna kata terpecah pada kalimat "perhatian mereka terpecah" adalah ....',
+                options: [
+                    { val: 'A', text: 'rusak' },
+                    { val: 'B', text: 'terbagi ke banyak hal sehingga tidak fokus' },
+                    { val: 'C', text: 'hilang sepenuhnya' },
+                    { val: 'D', text: 'bertambah kuat' }
+                ],
+                explanation: 'Dalam konteks teks, kata "terpecah" bermakna perhatian siswa terbagi ke banyak hal sehingga konsentrasi belajar menjadi buyar dan tidak fokus.'
+            },
+            {
+                id: 5,
+                name: 'quiz_q5',
+                correct: 'D',
+                points: 20,
+                question: 'Bagian teks stimulus yang berfungsi sebagai simpulan atau penyelesaian terdapat pada paragraf ....',
+                options: [
+                    { val: 'A', text: 'pertama' },
+                    { val: 'B', text: 'kedua' },
+                    { val: 'C', text: 'ketiga' },
+                    { val: 'D', text: 'keempat' }
+                ],
+                explanation: 'Paragraf keempat menyajikan simpulan jalan tengah yang berimbang dan menawarkan solusi pengaturan penggunaan ponsel atas izin guru.'
+            }
+        ]
     };
 
     const state = {
-        pdfDoc: null,
         pageFlip: null,
         currentPageIndex: 0,
         currentZoomIndex: CONFIG.defaultZoomIndex,
-        renderedPages: new Set(),
-        renderingQueue: new Set(),
         isPanning: false,
         panStart: { x: 0, y: 0 },
-        panOffset: { x: 0, y: 0 }
+        panOffset: { x: 0, y: 0 },
+        quizEvaluated: false,
+        stepperCurrentIndex: 0
     };
 
     // Elemen DOM
@@ -35,13 +105,11 @@
         zoomWrapper: document.getElementById('zoom-wrapper'),
         loadingOverlay: document.getElementById('loading-overlay'),
         progressBar: document.getElementById('loading-progress-bar'),
-        errorOverlay: document.getElementById('error-overlay'),
-        errorMessage: document.getElementById('error-message'),
-        btnRetryLoad: document.getElementById('btn-retry-load'),
         tipBanner: document.getElementById('tip-banner'),
         btnCloseTip: document.getElementById('btn-close-tip'),
-        
-        // Tombol Navigasi
+        btnJumpQuiz: document.getElementById('btn-jump-quiz'),
+
+        // Navigasi
         btnFirst: document.getElementById('btn-first'),
         btnPrev: document.getElementById('btn-prev'),
         btnNext: document.getElementById('btn-next'),
@@ -51,7 +119,7 @@
         pageSelect: document.getElementById('page-select'),
         pageIndicator: document.getElementById('page-indicator'),
 
-        // Tombol Zoom & Layar
+        // Zoom & Layar Penuh
         btnZoomIn: document.getElementById('btn-zoom-in'),
         btnZoomOut: document.getElementById('btn-zoom-out'),
         btnZoomReset: document.getElementById('btn-zoom-reset'),
@@ -60,86 +128,59 @@
         iconFsEnter: document.getElementById('icon-fs-enter'),
         iconFsExit: document.getElementById('icon-fs-exit'),
 
-        // Modal
+        // Modal Daftar Halaman
         btnOpenToc: document.getElementById('btn-open-toc'),
         btnCloseToc: document.getElementById('btn-close-toc'),
         modalToc: document.getElementById('modal-toc'),
         tocCards: document.querySelectorAll('.toc-card'),
 
+        // Modal Petunjuk
         btnOpenGuide: document.getElementById('btn-open-guide'),
         btnCloseGuide: document.getElementById('btn-close-guide'),
-        modalGuide: document.getElementById('modal-guide')
+        modalGuide: document.getElementById('modal-guide'),
+
+        // Kuis di Halaman 8
+        btnCheckQuiz: document.getElementById('btn-check-quiz'),
+        btnResetQuiz: document.getElementById('btn-reset-quiz'),
+        btnOpenInteractiveQuiz: document.getElementById('btn-open-interactive-quiz'),
+        quizScoreVal: document.getElementById('quiz-score-val'),
+        quizStatusTitle: document.getElementById('quiz-status-title'),
+        quizStatusDesc: document.getElementById('quiz-status-desc'),
+        quizTimestamp: document.getElementById('quiz-timestamp'),
+
+        // Modal Kuis Terpandu
+        modalInteractiveQuiz: document.getElementById('modal-interactive-quiz'),
+        btnCloseInteractiveQuiz: document.getElementById('btn-close-interactive-quiz'),
+        stepperQContainer: document.getElementById('stepper-q-container'),
+        quizDotsContainer: document.getElementById('quiz-dots-container'),
+        btnQuizPrevStep: document.getElementById('btn-quiz-prev-step'),
+        btnQuizNextStep: document.getElementById('btn-quiz-next-step'),
+        quizStepIndicator: document.getElementById('quiz-step-indicator')
     };
 
     /**
      * Inisialisasi Aplikasi
      */
-    async function initApp() {
+    function initApp() {
         setupEventListeners();
-        setupPDFWorker();
-
-        try {
-            await loadPDFDocument();
-            initPageFlip();
-            await renderPriorityPages();
-            hideLoadingOverlay();
-        } catch (error) {
-            console.error('Inisialisasi flipbook gagal:', error);
-            showError('Terjadi kesalahan saat memproses modul. Pastikan file assets/modul.pdf dapat diakses.');
-        }
+        restoreSavedData();
+        initPageFlip();
+        initInteractiveQuizStepper();
+        hideLoadingOverlay();
     }
 
     /**
-     * Konfigurasi PDF.js Worker dengan fallback
-     */
-    function setupPDFWorker() {
-        if (typeof pdfjsLib === 'undefined') {
-            throw new Error('Pustaka PDF.js tidak ditemukan.');
-        }
-
-        try {
-            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-        } catch (e) {
-            console.warn('Worker eksternal tidak aktif, menggunakan pemrosesan langsung:', e);
-        }
-    }
-
-    /**
-     * Memuat dokumen PDF dari assets/modul.pdf
-     */
-    async function loadPDFDocument() {
-        updateProgress(20);
-
-        const loadingTask = pdfjsLib.getDocument({
-            url: CONFIG.pdfPath,
-            cMapUrl: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/cmaps/',
-            cMapPacked: true
-        });
-
-        loadingTask.onProgress = function (progress) {
-            if (progress.total > 0) {
-                const percent = Math.min(60, 20 + Math.round((progress.loaded / progress.total) * 40));
-                updateProgress(percent);
-            }
-        };
-
-        state.pdfDoc = await loadingTask.promise;
-        updateProgress(65);
-    }
-
-    /**
-     * Inisialisasi StPageFlip untuk animasi membalik halaman
+     * Inisialisasi StPageFlip untuk Animasi Lembaran Buku
      */
     function initPageFlip() {
         if (!window.St || !window.St.PageFlip) {
-            throw new Error('Pustaka StPageFlip tidak ditemukan.');
+            console.error('Pustaka StPageFlip tidak ditemukan.');
+            return;
         }
 
-        const isMobile = window.innerWidth <= 768;
-
         state.pageFlip = new St.PageFlip(elements.flipbook, {
-            width: 550, // Lebar dasar per halaman tunggal
-            height: 778, // Tinggi dasar rasio A4 (1 : 1.414)
+            width: 550,
+            height: 778,
             size: 'stretch',
             minWidth: 280,
             maxWidth: 850,
@@ -165,124 +206,36 @@
         state.pageFlip.on('flip', function (e) {
             state.currentPageIndex = e.data;
             updateControlsState();
-            lazyRenderCurrentSpread();
         });
 
-        // Event listener saat orientasi berganti (potret / lanskap)
+        // Event listener saat orientasi berganti
         state.pageFlip.on('changeOrientation', function () {
             updateControlsState();
         });
 
-        updateProgress(85);
         updateControlsState();
+
+        // Mencegah konflik seretan flipbook saat mengetik pada input/textarea
+        preventFlipConflictOnInputs();
     }
 
     /**
-     * Render Halaman Prioritas (Halaman 1 dan Halaman 2-3)
+     * Mencegah event seret flipbook saat berinteraksi dengan input, textarea, dan label
      */
-    async function renderPriorityPages() {
-        // Render Halaman 1 terlebih dahulu agar sampul langsung tampil
-        await renderSinglePage(1);
-        updateProgress(95);
-
-        // Render Halaman 2 dan 3 untuk halaman terbuka pertama
-        renderSinglePage(2);
-        renderSinglePage(3);
-
-        // Lakukan render halaman tersisa secara bertahap di latar belakang
-        scheduleBackgroundRender();
-    }
-
-    /**
-     * Render satu halaman PDF ke elemen canvas beresolusi tinggi
-     */
-    async function renderSinglePage(pageNumber) {
-        if (!state.pdfDoc || pageNumber < 1 || pageNumber > CONFIG.totalPages) return;
-        if (state.renderedPages.has(pageNumber) || state.renderingQueue.has(pageNumber)) return;
-
-        state.renderingQueue.add(pageNumber);
-
-        try {
-            const page = await state.pdfDoc.getPage(pageNumber);
-            const canvas = document.getElementById('pdf-canvas-' + pageNumber);
-            const skeleton = document.getElementById('skeleton-' + pageNumber);
-            if (!canvas) return;
-
-            // Hitung skala render resolusi tinggi
-            const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
-            const scale = CONFIG.renderScale * (dpr > 1.2 ? 1.15 : 1.0);
-            const viewport = page.getViewport({ scale: scale });
-
-            canvas.width = Math.floor(viewport.width);
-            canvas.height = Math.floor(viewport.height);
-
-            const ctx = canvas.getContext('2d', { alpha: false });
-            ctx.imageSmoothingEnabled = true;
-            ctx.imageSmoothingQuality = 'high';
-
-            const renderContext = {
-                canvasContext: ctx,
-                viewport: viewport
-            };
-
-            await page.render(renderContext).promise;
-
-            state.renderedPages.add(pageNumber);
-            state.renderingQueue.delete(pageNumber);
-
-            if (skeleton) {
-                skeleton.classList.add('is-hidden');
-            }
-        } catch (err) {
-            console.error('Gagal merender halaman ' + pageNumber + ':', err);
-            state.renderingQueue.delete(pageNumber);
-        }
-    }
-
-    /**
-     * Render halaman di spread saat ini secara malas (lazy)
-     */
-    function lazyRenderCurrentSpread() {
-        const cur = state.currentPageIndex;
-        // Prioritaskan halaman saat ini dan sekitarnya
-        const pagesToLoad = [
-            cur + 1,
-            cur + 2,
-            Math.max(1, cur),
-            Math.min(CONFIG.totalPages, cur + 3)
-        ];
-
-        pagesToLoad.forEach(function (pageNum) {
-            if (pageNum >= 1 && pageNum <= CONFIG.totalPages) {
-                renderSinglePage(pageNum);
-            }
+    function preventFlipConflictOnInputs() {
+        const interactives = document.querySelectorAll('input, textarea, button, select, label, .lkpd-table');
+        interactives.forEach(function (el) {
+            el.addEventListener('mousedown', function (e) {
+                e.stopPropagation();
+            });
+            el.addEventListener('touchstart', function (e) {
+                e.stopPropagation();
+            }, { passive: true });
         });
     }
 
     /**
-     * Render halaman tersisa secara bertahap agar tidak membebani memori
-     */
-    function scheduleBackgroundRender() {
-        const remainingPages = [4, 5, 6, 7, 8];
-        let index = 0;
-
-        function renderNext() {
-            if (index >= remainingPages.length) return;
-            const p = remainingPages[index++];
-            renderSinglePage(p).then(function () {
-                if ('requestIdleCallback' in window) {
-                    window.requestIdleCallback(renderNext, { timeout: 800 });
-                } else {
-                    setTimeout(renderNext, 300);
-                }
-            });
-        }
-
-        setTimeout(renderNext, 400);
-    }
-
-    /**
-     * Perbarui status kontrol navigasi, tombol, dan indikator
+     * Perbarui Status Kontrol Navigasi & Indikator
      */
     function updateControlsState() {
         if (!state.pageFlip) return;
@@ -291,7 +244,6 @@
         const total = CONFIG.totalPages;
         const orientation = state.pageFlip.getOrientation();
 
-        // Teks indikator halaman
         let indicatorText = '';
         if (orientation === 'portrait') {
             indicatorText = 'Halaman ' + (current + 1) + ' dari ' + total;
@@ -299,7 +251,7 @@
             if (current === 0) {
                 indicatorText = 'Halaman 1 dari ' + total + ' (Sampul Depan)';
             } else if (current >= total - 1) {
-                indicatorText = 'Halaman ' + total + ' dari ' + total + ' (Sampul Belakang)';
+                indicatorText = 'Halaman ' + total + ' dari ' + total + ' (Pusat Evaluasi Kuis)';
             } else {
                 const left = current + 1;
                 const right = Math.min(current + 2, total);
@@ -309,12 +261,10 @@
 
         elements.pageIndicator.textContent = indicatorText;
 
-        // Sinkronkan nilai dropdown pemilih halaman
         if (elements.pageSelect) {
             elements.pageSelect.value = String(current);
         }
 
-        // Status tombol disabled
         const isFirst = current === 0;
         const isLast = current >= total - 1;
 
@@ -326,13 +276,207 @@
         elements.btnLast.disabled = isLast;
         elements.sideNextBtn.disabled = isLast;
 
-        // Sorot kartu aktif di modal daftar halaman
         elements.tocCards.forEach(function (card) {
             const pageNum = parseInt(card.getAttribute('data-page'), 10);
             if (pageNum === current) {
                 card.classList.add('is-active-card');
             } else {
                 card.classList.remove('is-active-card');
+            }
+        });
+    }
+
+    /**
+     * Logika Evaluasi Kuis Interaktif
+     */
+    function evaluateQuiz() {
+        let totalScore = 0;
+        let answeredCount = 0;
+        const results = [];
+
+        CONFIG.quizQuestions.forEach(function (q) {
+            const selectedOpt = document.querySelector('input[name="' + q.name + '"]:checked');
+            const userChoice = selectedOpt ? selectedOpt.value : null;
+
+            if (userChoice) answeredCount++;
+
+            const isCorrect = userChoice === q.correct;
+            if (isCorrect) {
+                totalScore += q.points;
+            }
+
+            results.push({
+                id: q.id,
+                userChoice: userChoice,
+                correctChoice: q.correct,
+                isCorrect: isCorrect,
+                explanation: q.explanation
+            });
+        });
+
+        // Perbarui Tampilan Kartu Skor di Halaman 8
+        elements.quizScoreVal.textContent = totalScore;
+
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' WIB';
+        elements.quizTimestamp.textContent = 'Diperiksa pada ' + timeStr;
+
+        if (answeredCount === 0) {
+            elements.quizStatusTitle.textContent = 'Belum Ada Soal yang Dijawab';
+            elements.quizStatusDesc.textContent = 'Silakan pilih jawaban pada nomor 1 sampai 5 di Halaman 2 dan 3, kemudian periksa kembali.';
+        } else if (totalScore === 100) {
+            elements.quizStatusTitle.textContent = 'Sempurna! Pemahaman Sangat Baik';
+            elements.quizStatusDesc.textContent = 'Luar biasa! Kamu berhasil menjawab seluruh soal pilihan ganda dengan tepat sesuai materi teks diskusi.';
+        } else if (totalScore >= 60) {
+            elements.quizStatusTitle.textContent = 'Bagus! Pemahaman Cukup Baik';
+            elements.quizStatusDesc.textContent = 'Kamu sudah memahami sebagian besar materi teks diskusi. Pelajari kembali poin pembahasan di bawah untuk menyempurnakan pemahaman.';
+        } else {
+            elements.quizStatusTitle.textContent = 'Perlu Berlatih dan Membaca Kembali';
+            elements.quizStatusDesc.textContent = 'Baca kembali teks stimulus di Halaman 2 dan cermati argumen pro serta kontra sebelum mencoba kuis ulang.';
+        }
+
+        // Perbarui Rincian Analisis per Nomor
+        results.forEach(function (res) {
+            const itemEl = document.getElementById('rev-item-' + res.id);
+            const userAnsEl = document.getElementById('rev-u-' + res.id);
+            const badgeEl = document.getElementById('rev-badge-' + res.id);
+
+            if (!itemEl) return;
+
+            itemEl.classList.remove('is-correct', 'is-wrong');
+
+            if (!res.userChoice) {
+                userAnsEl.textContent = 'Jawabanmu: (Kosong)';
+                badgeEl.textContent = 'Belum dijawab';
+                badgeEl.className = 'rev-badge';
+            } else if (res.isCorrect) {
+                itemEl.classList.add('is-correct');
+                userAnsEl.textContent = 'Jawabanmu: ' + res.userChoice + ' (Tepat)';
+                badgeEl.textContent = 'Benar (+20)';
+                badgeEl.className = 'rev-badge';
+            } else {
+                itemEl.classList.add('is-wrong');
+                userAnsEl.textContent = 'Jawabanmu: ' + res.userChoice + ' (Kurang tepat)';
+                badgeEl.textContent = 'Salah (+0)';
+                badgeEl.className = 'rev-badge';
+            }
+        });
+
+        state.quizEvaluated = true;
+        saveDataToStorage();
+    }
+
+    /**
+     * Reset Kuis ke Status Awal
+     */
+    function resetQuiz() {
+        CONFIG.quizQuestions.forEach(function (q) {
+            const radios = document.querySelectorAll('input[name="' + q.name + '"]');
+            radios.forEach(function (r) {
+                r.checked = false;
+            });
+
+            const itemEl = document.getElementById('rev-item-' + q.id);
+            const userAnsEl = document.getElementById('rev-u-' + q.id);
+            const badgeEl = document.getElementById('rev-badge-' + q.id);
+
+            if (itemEl) itemEl.classList.remove('is-correct', 'is-wrong');
+            if (userAnsEl) userAnsEl.textContent = 'Jawabanmu: -';
+            if (badgeEl) {
+                badgeEl.textContent = 'Belum dijawab';
+                badgeEl.className = 'rev-badge';
+            }
+        });
+
+        elements.quizScoreVal.textContent = '0';
+        elements.quizTimestamp.textContent = 'Belum diperiksa';
+        elements.quizStatusTitle.textContent = 'Kuis Direset';
+        elements.quizStatusDesc.textContent = 'Silakan pilih kembali jawaban pada nomor 1 sampai 5 di Halaman 2 dan 3, kemudian tekan tombol Periksa Hasil Kuis.';
+        state.quizEvaluated = false;
+        saveDataToStorage();
+    }
+
+    /**
+     * Inisialisasi Mode Kuis Terpandu (Modal Stepper)
+     */
+    function initInteractiveQuizStepper() {
+        // Buat dot navigasi
+        elements.quizDotsContainer.innerHTML = '';
+        CONFIG.quizQuestions.forEach(function (_, i) {
+            const dot = document.createElement('div');
+            dot.className = 'stepper-dot' + (i === 0 ? ' active' : '');
+            dot.setAttribute('data-idx', i);
+            elements.quizDotsContainer.appendChild(dot);
+        });
+
+        renderStepperQuestion(0);
+    }
+
+    function renderStepperQuestion(index) {
+        state.stepperCurrentIndex = index;
+        const q = CONFIG.quizQuestions[index];
+        const total = CONFIG.quizQuestions.length;
+
+        elements.quizStepIndicator.textContent = 'Soal ' + (index + 1) + ' dari ' + total;
+
+        // Cek jawaban saat ini dari radio button buku
+        const curRadio = document.querySelector('input[name="' + q.name + '"]:checked');
+        const curVal = curRadio ? curRadio.value : '';
+
+        let html = '<div class="q-header">' +
+            '<span class="q-num">' + q.id + '.</span>' +
+            '<p class="q-text">' + q.question + '</p>' +
+            '</div>' +
+            '<div class="quiz-options-group" style="padding-left: 0; margin-top: 12px;">';
+
+        q.options.forEach(function (opt) {
+            const isChecked = curVal === opt.val ? ' checked' : '';
+            html += '<label class="quiz-opt-label">' +
+                '<input type="radio" name="stepper_opt" value="' + opt.val + '" class="quiz-radio"' + isChecked + '>' +
+                '<span class="opt-indicator">' + opt.val + '</span>' +
+                '<span class="opt-desc">' + opt.text + '</span>' +
+                '</label>';
+        });
+
+        html += '</div>';
+        elements.stepperQContainer.innerHTML = html;
+
+        // Tambah listener pemilihan opsi pada modal stepper
+        const stepperRadios = elements.stepperQContainer.querySelectorAll('input[name="stepper_opt"]');
+        stepperRadios.forEach(function (r) {
+            r.addEventListener('change', function () {
+                // Sinkronkan ke radio button di buku utama
+                const mainRadio = document.querySelector('input[name="' + q.name + '"][value="' + this.value + '"]');
+                if (mainRadio) {
+                    mainRadio.checked = true;
+                    saveDataToStorage();
+                }
+                updateStepperDots();
+            });
+        });
+
+        // Perbarui tombol stepper
+        elements.btnQuizPrevStep.disabled = index === 0;
+        if (index === total - 1) {
+            elements.btnQuizNextStep.textContent = 'Selesai & Periksa Nilai';
+        } else {
+            elements.btnQuizNextStep.textContent = 'Selanjutnya';
+        }
+
+        updateStepperDots();
+    }
+
+    function updateStepperDots() {
+        const dots = elements.quizDotsContainer.querySelectorAll('.stepper-dot');
+        dots.forEach(function (dot, i) {
+            dot.classList.remove('active', 'answered');
+            if (i === state.stepperCurrentIndex) {
+                dot.classList.add('active');
+            }
+            const q = CONFIG.quizQuestions[i];
+            const hasAns = !!document.querySelector('input[name="' + q.name + '"]:checked');
+            if (hasAns) {
+                dot.classList.add('answered');
             }
         });
     }
@@ -349,7 +493,6 @@
         elements.zoomBadge.textContent = Math.round(zoom * 100) + '%';
         applyZoomTransform();
 
-        // Tombol disabled jika mencapai batas
         elements.btnZoomOut.disabled = newIndex === 0;
         elements.btnZoomIn.disabled = newIndex === CONFIG.zoomLevels.length - 1;
 
@@ -424,7 +567,6 @@
             elements.btnFullscreen.setAttribute('title', 'Mode Layar Penuh (F)');
         }
 
-        // Perbarui ukuran flipbook setelah transisi layar
         setTimeout(function () {
             if (state.pageFlip) {
                 state.pageFlip.update();
@@ -433,7 +575,7 @@
     }
 
     /**
-     * Pengaturan Panning saat Halaman Diperbesar (Zoom > 1.0)
+     * Panning saat Zoom
      */
     function setupPanning() {
         const vp = elements.bookViewport;
@@ -464,10 +606,67 @@
     }
 
     /**
+     * Penyimpanan & Pemulihan Data Siswa (LocalStorage)
+     */
+    function saveDataToStorage() {
+        const data = {
+            inputs: {},
+            radios: {}
+        };
+
+        const textInputs = document.querySelectorAll('.form-input, .table-textarea, .essay-textarea');
+        textInputs.forEach(function (inp, idx) {
+            const key = inp.id || 'inp_' + idx;
+            data.inputs[key] = inp.value;
+        });
+
+        const checkedRadios = document.querySelectorAll('input[type="radio"]:checked');
+        checkedRadios.forEach(function (r) {
+            data.radios[r.name] = r.value;
+        });
+
+        try {
+            localStorage.setItem(CONFIG.storageKey, JSON.stringify(data));
+        } catch (e) {
+            // Abaikan jika storage penuh atau privasi browser dinonaktifkan
+        }
+    }
+
+    function restoreSavedData() {
+        try {
+            const raw = localStorage.getItem(CONFIG.storageKey);
+            if (!raw) return;
+            const data = JSON.parse(raw);
+
+            if (data.inputs) {
+                const textInputs = document.querySelectorAll('.form-input, .table-textarea, .essay-textarea');
+                textInputs.forEach(function (inp, idx) {
+                    const key = inp.id || 'inp_' + idx;
+                    if (data.inputs[key] !== undefined) {
+                        inp.value = data.inputs[key];
+                    }
+                });
+            }
+
+            if (data.radios) {
+                Object.keys(data.radios).forEach(function (name) {
+                    const val = data.radios[name];
+                    const radio = document.querySelector('input[name="' + name + '"][value="' + val + '"]');
+                    if (radio) {
+                        radio.checked = true;
+                    }
+                });
+            }
+        } catch (e) {
+            console.warn('Gagal memulihkan sesi lokal:', e);
+        }
+    }
+
+    /**
      * Daftarkan Seluruh Event Listener
      */
     function setupEventListeners() {
-        // Tombol Navigasi Halaman
+        // Tombol Navigasi
         elements.btnFirst.addEventListener('click', function () {
             if (state.pageFlip) state.pageFlip.flip(0);
         });
@@ -492,6 +691,13 @@
             if (state.pageFlip) state.pageFlip.flip(CONFIG.totalPages - 1);
         });
 
+        // Tombol Lompat ke Kuis (Header & Halaman 8)
+        elements.btnJumpQuiz.addEventListener('click', function () {
+            if (state.pageFlip) {
+                state.pageFlip.flip(CONFIG.totalPages - 1);
+            }
+        });
+
         // Dropdown Pemilih Halaman
         elements.pageSelect.addEventListener('change', function (e) {
             const targetPage = parseInt(e.target.value, 10);
@@ -512,10 +718,14 @@
         document.addEventListener('mozfullscreenchange', updateFullscreenIcons);
         document.addEventListener('MSFullscreenChange', updateFullscreenIcons);
 
-        // Banner Petunjuk Cepat
+        // Banner Tip
         elements.btnCloseTip.addEventListener('click', function () {
             elements.tipBanner.style.display = 'none';
         });
+
+        // Kuis Evaluasi di Halaman 8
+        elements.btnCheckQuiz.addEventListener('click', evaluateQuiz);
+        elements.btnResetQuiz.addEventListener('click', resetQuiz);
 
         // Modal Daftar Halaman
         elements.btnOpenToc.addEventListener('click', function () {
@@ -564,15 +774,56 @@
             }
         });
 
-        // Tombol Coba Lagi jika terjadi kesalahan
-        elements.btnRetryLoad.addEventListener('click', function () {
-            window.location.reload();
+        // Modal Kuis Terpandu
+        elements.btnOpenInteractiveQuiz.addEventListener('click', function () {
+            elements.modalInteractiveQuiz.classList.add('is-active');
+            elements.modalInteractiveQuiz.setAttribute('aria-hidden', 'false');
+            renderStepperQuestion(0);
+        });
+
+        elements.btnCloseInteractiveQuiz.addEventListener('click', function () {
+            elements.modalInteractiveQuiz.classList.remove('is-active');
+            elements.modalInteractiveQuiz.setAttribute('aria-hidden', 'true');
+        });
+
+        elements.btnQuizPrevStep.addEventListener('click', function () {
+            if (state.stepperCurrentIndex > 0) {
+                renderStepperQuestion(state.stepperCurrentIndex - 1);
+            }
+        });
+
+        elements.btnQuizNextStep.addEventListener('click', function () {
+            const total = CONFIG.quizQuestions.length;
+            if (state.stepperCurrentIndex < total - 1) {
+                renderStepperQuestion(state.stepperCurrentIndex + 1);
+            } else {
+                // Selesai kuis terpandu: tutup modal, evaluasi, dan lompat ke Halaman 8
+                elements.modalInteractiveQuiz.classList.remove('is-active');
+                elements.modalInteractiveQuiz.setAttribute('aria-hidden', 'true');
+                evaluateQuiz();
+                if (state.pageFlip) {
+                    state.pageFlip.flip(CONFIG.totalPages - 1);
+                }
+            }
+        });
+
+        // Simpan input otomatis saat siswa mengetik atau memilih opsi
+        document.addEventListener('input', function (e) {
+            if (e.target.matches('.form-input, .table-textarea, .essay-textarea')) {
+                saveDataToStorage();
+            }
+        });
+
+        document.addEventListener('change', function (e) {
+            if (e.target.matches('input[type="radio"]')) {
+                saveDataToStorage();
+            }
         });
 
         // Pintasan Keyboard
         window.addEventListener('keydown', handleKeyboardShortcuts);
 
-        // Resize Window
+        // Penyesuaian Resize Window
         let resizeTimeout = null;
         window.addEventListener('resize', function () {
             clearTimeout(resizeTimeout);
@@ -584,7 +835,6 @@
             }, 250);
         });
 
-        // Setup drag-pan saat zoom
         setupPanning();
     }
 
@@ -592,8 +842,7 @@
      * Tangani Pintasan Keyboard
      */
     function handleKeyboardShortcuts(e) {
-        // Jangan aktif jika fokus pada select atau input
-        if (e.target.tagName === 'SELECT' || e.target.tagName === 'INPUT') return;
+        if (e.target.tagName === 'SELECT' || e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 
         switch (e.key) {
             case 'ArrowLeft':
@@ -628,38 +877,20 @@
             case 'Escape':
                 elements.modalToc.classList.remove('is-active');
                 elements.modalGuide.classList.remove('is-active');
+                elements.modalInteractiveQuiz.classList.remove('is-active');
                 break;
             default:
                 break;
         }
     }
 
-    /**
-     * Perbarui Bar Kemajuan Pemuatan
-     */
-    function updateProgress(percent) {
-        if (elements.progressBar) {
-            elements.progressBar.style.width = percent + '%';
-        }
-    }
-
-    /**
-     * Sembunyikan Overlay Pemuatan
-     */
     function hideLoadingOverlay() {
-        updateProgress(100);
+        if (elements.progressBar) {
+            elements.progressBar.style.width = '100%';
+        }
         setTimeout(function () {
             elements.loadingOverlay.classList.add('is-hidden');
         }, 300);
-    }
-
-    /**
-     * Tampilkan Notifikasi Kesalahan
-     */
-    function showError(message) {
-        elements.loadingOverlay.classList.add('is-hidden');
-        elements.errorMessage.textContent = message;
-        elements.errorOverlay.classList.remove('is-hidden');
     }
 
     // Jalankan aplikasi saat DOM siap

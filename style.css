@@ -1,6 +1,7 @@
 /* ==========================================================================
    FLIPBOOK LKPD - TEKS DISKUSI KELAS X
-   Tema Desain: Pastel Green, Sage Green, Mint Green, dan Storybook Lucu
+   Format: Isi HTML & CSS Asli Interaktif dengan Fitur Kuis
+   Tema Desain: Pastel Green, Sage Green, Mint Green, dan Digital Storybook
    Aturan: Tanpa Emoji dan Tanpa Karakter Em Dash
    ========================================================================== */
 
@@ -9,7 +10,7 @@
     --color-bg-main: #f3f8f4;
     --color-bg-secondary: #eaf3ec;
     --color-surface: #ffffff;
-    --color-surface-translucent: rgba(255, 255, 255, 0.92);
+    --color-surface-translucent: rgba(255, 255, 255, 0.94);
 
     --sage-50: #f4f8f4;
     --sage-100: #e5f1e7;
@@ -22,18 +23,20 @@
     --sage-800: #234329;
     --sage-900: #172c1b;
 
+    --mint-50: #f0faf3;
     --mint-100: #e2f8e9;
     --mint-200: #bdf2cc;
     --mint-400: #6ee790;
     --mint-500: #43cb68;
 
     --cream-50: #fdfdfc;
-    --cream-100: #f8f9f6;
+    --cream-100: #f9faf7;
+    --cream-200: #f2f4ee;
 
     /* Teks & Kontras Tinggi */
     --text-primary: #1c3522;
-    --text-secondary: #426349;
-    --text-muted: #67876e;
+    --text-secondary: #3e5f45;
+    --text-muted: #64826b;
     --text-light: #ffffff;
 
     /* Garis & Bayangan */
@@ -44,7 +47,7 @@
     --shadow-sm: 0 2px 8px rgba(35, 67, 41, 0.05);
     --shadow-md: 0 6px 18px rgba(35, 67, 41, 0.08);
     --shadow-lg: 0 12px 30px rgba(35, 67, 41, 0.12);
-    --shadow-book: 0 24px 50px -10px rgba(23, 44, 27, 0.22), 0 8px 18px -4px rgba(23, 44, 27, 0.1);
+    --shadow-book: 0 22px 50px -10px rgba(23, 44, 27, 0.22), 0 8px 18px -4px rgba(23, 44, 27, 0.1);
 
     /* Sudut Membulat */
     --radius-sm: 8px;
@@ -367,6 +370,20 @@ a {
     box-shadow: 0 6px 16px rgba(66, 124, 75, 0.35);
 }
 
+.btn-quiz-highlight {
+    background: linear-gradient(135deg, var(--mint-400) 0%, var(--sage-500) 100%);
+    color: var(--text-light);
+    border: 1.5px solid var(--sage-500);
+    box-shadow: 0 4px 14px rgba(67, 203, 104, 0.3);
+    font-weight: 700;
+}
+
+.btn-quiz-highlight:hover {
+    background: linear-gradient(135deg, var(--mint-500) 0%, var(--sage-600) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(67, 203, 104, 0.45);
+}
+
 .btn:active {
     transform: translateY(0);
 }
@@ -480,9 +497,9 @@ a {
    -------------------------------------------------------------------------- */
 .book-viewport {
     width: 100%;
-    max-width: 1160px;
+    max-width: 1180px;
     height: calc(100vh - 190px);
-    max-height: 740px;
+    max-height: 750px;
     min-height: 480px;
     display: flex;
     align-items: center;
@@ -514,7 +531,7 @@ a {
    Wadah Flipbook (StPageFlip)
    -------------------------------------------------------------------------- */
 .flipbook {
-    display: none; /* Ditampilkan via JS setelah init */
+    display: none;
     position: relative;
     width: 100%;
     height: 100%;
@@ -525,7 +542,7 @@ a {
     display: block;
 }
 
-/* Penyesuaian Elemen Bawaan StPageFlip */
+/* StPageFlip Wrapper */
 .stf__parent {
     position: relative;
     display: flex;
@@ -535,7 +552,7 @@ a {
 
 .stf__wrapper {
     box-shadow: var(--shadow-book);
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-md);
     transition: box-shadow var(--transition-normal);
     background-color: #27402c;
     padding: 3px;
@@ -549,65 +566,99 @@ a {
     border-radius: var(--radius-sm);
 }
 
-/* Elemen Halaman */
+/* --------------------------------------------------------------------------
+   Halaman Buku (Storybook Pages)
+   -------------------------------------------------------------------------- */
 .page {
     background-color: #ffffff;
-    box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.03);
+    box-shadow: inset 0 0 35px rgba(0, 0, 0, 0.025);
     overflow: hidden;
+    position: relative;
 }
 
-.page[data-density="hard"] {
-    background-color: #ffffff;
-}
-
-.page-content {
+.page-content.storybook-page {
     width: 100%;
     height: 100%;
-    position: relative;
+    padding: 24px 26px 28px;
+    overflow-y: auto;
+    overflow-x: hidden;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    gap: 12px;
     background-color: #ffffff;
-    overflow: hidden;
+    position: relative;
+    scrollbar-width: thin;
+    scrollbar-color: var(--sage-300) transparent;
 }
 
-/* Efek Lipatan & Bayangan Tulang Buku (Book Spine) */
-.page:nth-child(odd) .page-content::after {
-    /* Halaman Kiri: Bayangan halus di sisi kanan */
+.page-content.storybook-page::-webkit-scrollbar {
+    width: 6px;
+}
+
+.page-content.storybook-page::-webkit-scrollbar-thumb {
+    background-color: var(--sage-300);
+    border-radius: var(--radius-full);
+}
+
+/* Header di Setiap Halaman */
+.book-page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 8px;
+    border-bottom: 1.5px solid var(--sage-200);
+    margin-bottom: 2px;
+}
+
+.header-tag {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--sage-700);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.header-page-num {
+    font-size: 0.74rem;
+    font-weight: 700;
+    color: var(--sage-800);
+    background-color: var(--sage-100);
+    padding: 2px 10px;
+    border-radius: var(--radius-full);
+}
+
+/* Bayangan Tulang Tengah Buku (Book Spine Seam) */
+.page:nth-child(odd) .storybook-page::after {
     content: '';
     position: absolute;
     top: 0;
     right: 0;
-    width: 25px;
+    width: 22px;
     height: 100%;
-    background: linear-gradient(to left, rgba(0, 0, 0, 0.08) 0%, rgba(0, 0, 0, 0.02) 60%, transparent 100%);
+    background: linear-gradient(to left, rgba(0, 0, 0, 0.06) 0%, rgba(0, 0, 0, 0.015) 60%, transparent 100%);
     pointer-events: none;
     z-index: 10;
 }
 
-.page:nth-child(even) .page-content::after {
-    /* Halaman Kanan: Bayangan halus di sisi kiri */
+.page:nth-child(even) .storybook-page::after {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
-    width: 25px;
+    width: 22px;
     height: 100%;
-    background: linear-gradient(to right, rgba(0, 0, 0, 0.08) 0%, rgba(0, 0, 0, 0.02) 60%, transparent 100%);
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.06) 0%, rgba(0, 0, 0, 0.015) 60%, transparent 100%);
     pointer-events: none;
     z-index: 10;
 }
 
-/* Sudut Kertas Menggulung (Corner Hint) */
 .page-corner-hint {
     position: absolute;
     bottom: 0;
-    width: 32px;
-    height: 32px;
+    width: 30px;
+    height: 30px;
     pointer-events: none;
-    opacity: 0.6;
-    transition: opacity var(--transition-fast);
+    opacity: 0.5;
     z-index: 12;
 }
 
@@ -621,52 +672,863 @@ a {
     background: linear-gradient(225deg, transparent 50%, rgba(100, 150, 110, 0.15) 50%, rgba(100, 150, 110, 0.35) 100%);
 }
 
-.page:hover .page-corner-hint {
-    opacity: 1;
+/* --------------------------------------------------------------------------
+   Gaya Halaman 1: Sampul Depan & Identitas
+   -------------------------------------------------------------------------- */
+.cover-hero-card {
+    text-align: center;
+    padding: 16px 14px;
+    background: linear-gradient(180deg, var(--mint-50) 0%, var(--sage-50) 100%);
+    border: 1.5px solid var(--sage-200);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
 }
 
-/* Canvas PDF */
-.page-canvas {
+.cover-badge-top {
+    display: inline-block;
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    color: var(--sage-800);
+    background-color: var(--mint-200);
+    padding: 3px 12px;
+    border-radius: var(--radius-full);
+    margin-bottom: 8px;
+}
+
+.cover-title-main {
+    font-family: var(--font-heading);
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: var(--sage-800);
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+}
+
+.cover-title-sub {
+    font-family: var(--font-heading);
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--sage-600);
+    margin-top: 2px;
+}
+
+.cover-divider-leaf {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin: 10px 0;
+}
+
+.divider-line {
+    height: 1.5px;
+    width: 60px;
+    background-color: var(--sage-300);
+}
+
+.divider-leaf-icon {
+    color: var(--sage-500);
+}
+
+.cover-topic {
+    font-family: var(--font-heading);
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.cover-meta-info {
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    line-height: 1.4;
+}
+
+.creator-box {
+    background-color: var(--cream-100);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-md);
+    padding: 10px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 0.78rem;
+}
+
+.creator-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.c-label {
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.c-val {
+    font-weight: 700;
+    color: var(--sage-800);
+    text-align: right;
+}
+
+.student-id-card {
+    background-color: #ffffff;
+    border: 1.5px solid var(--sage-200);
+    border-radius: var(--radius-md);
+    padding: 12px 14px;
+}
+
+.card-mini-title {
+    font-family: var(--font-heading);
+    font-size: 0.86rem;
+    font-weight: 700;
+    color: var(--sage-800);
+    margin-bottom: 8px;
+}
+
+.id-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 12px;
+}
+
+.id-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.id-field label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.form-input {
+    font-family: inherit;
+    font-size: 0.8rem;
+    padding: 6px 10px;
+    border-radius: var(--radius-sm);
+    border: 1.5px solid var(--border-soft);
+    background-color: var(--cream-50);
+    color: var(--text-primary);
+    outline: none;
+    transition: all var(--transition-fast);
+}
+
+.form-input:focus {
+    background-color: #ffffff;
+    border-color: var(--sage-500);
+    box-shadow: 0 0 0 3px rgba(85, 150, 94, 0.15);
+}
+
+.instruction-box {
+    background-color: var(--sage-50);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--sage-200);
+    padding: 12px 14px;
+    font-size: 0.78rem;
+}
+
+.box-title {
+    font-family: var(--font-heading);
+    font-size: 0.84rem;
+    font-weight: 700;
+    color: var(--sage-800);
+    margin-bottom: 6px;
+}
+
+.clean-bullet-list, .clean-num-list {
+    padding-left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    color: var(--text-secondary);
+    line-height: 1.45;
+}
+
+/* --------------------------------------------------------------------------
+   Gaya Halaman 2: Teks Stimulus & Soal Evaluasi
+   -------------------------------------------------------------------------- */
+.section-badge-pill {
+    display: inline-block;
+    font-size: 0.74rem;
+    font-weight: 700;
+    color: var(--sage-800);
+    background-color: var(--sage-100);
+    border: 1px solid var(--sage-300);
+    padding: 4px 12px;
+    border-radius: var(--radius-full);
+    margin-bottom: 8px;
+}
+
+.stimulus-main-title {
+    font-family: var(--font-heading);
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--sage-800);
+    margin-bottom: 8px;
+}
+
+.stimulus-article {
+    background-color: var(--cream-100);
+    border: 1.5px solid var(--sage-200);
+    border-radius: var(--radius-md);
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    box-shadow: var(--shadow-sm);
+}
+
+.article-p {
+    font-size: 0.82rem;
+    line-height: 1.6;
+    color: var(--text-primary);
+    text-align: justify;
+}
+
+.drop-cap {
+    float: left;
+    font-family: var(--font-heading);
+    font-size: 2.2rem;
+    line-height: 0.85;
+    font-weight: 800;
+    color: var(--sage-600);
+    padding-right: 6px;
+    padding-top: 2px;
+}
+
+/* Pilihan Ganda & Opsi Kuis */
+.quiz-section-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.quiz-instruction-note {
+    font-size: 0.78rem;
+    font-style: italic;
+    color: var(--text-muted);
+}
+
+.quiz-item {
+    background-color: #ffffff;
+    border: 1.5px solid var(--border-soft);
+    border-radius: var(--radius-md);
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: all var(--transition-fast);
+}
+
+.quiz-item:hover {
+    border-color: var(--sage-400);
+    box-shadow: var(--shadow-sm);
+}
+
+.q-header {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+}
+
+.q-num {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 0.88rem;
+    color: var(--sage-700);
+}
+
+.q-text {
+    font-size: 0.84rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.45;
+}
+
+.quiz-options-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-left: 18px;
+}
+
+.quiz-opt-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 12px;
+    border-radius: var(--radius-md);
+    border: 1.5px solid var(--border-light);
+    background-color: var(--cream-50);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-size: 0.8rem;
+    color: var(--text-primary);
+}
+
+.quiz-opt-label:hover {
+    background-color: var(--sage-50);
+    border-color: var(--sage-300);
+}
+
+.quiz-radio {
+    display: none;
+}
+
+.opt-indicator {
+    width: 22px;
+    height: 22px;
+    border-radius: var(--radius-full);
+    background-color: var(--sage-100);
+    color: var(--sage-700);
+    font-weight: 700;
+    font-size: 0.72rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all var(--transition-fast);
+}
+
+.quiz-radio:checked + .opt-indicator {
+    background-color: var(--sage-600);
+    color: var(--text-light);
+    transform: scale(1.1);
+}
+
+.quiz-opt-label:has(.quiz-radio:checked) {
+    background-color: var(--mint-100);
+    border-color: var(--sage-500);
+    font-weight: 600;
+}
+
+/* --------------------------------------------------------------------------
+   Tabel & Uraian (Halaman 3, 4, 5, 6, 7)
+   -------------------------------------------------------------------------- */
+.table-card-wrapper {
     width: 100%;
-    height: 100%;
-    object-fit: contain;
-    display: block;
-    user-select: none;
-    -webkit-user-select: none;
+    overflow-x: auto;
+    border-radius: var(--radius-md);
+    border: 1.5px solid var(--sage-200);
+    box-shadow: var(--shadow-sm);
+    margin: 6px 0;
 }
 
-/* Skeleton Loading Per Halaman */
-.page-loading-skeleton {
-    position: absolute;
-    inset: 0;
+.lkpd-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.78rem;
+    text-align: left;
+    background-color: #ffffff;
+}
+
+.lkpd-table th {
+    background-color: var(--sage-100);
+    color: var(--sage-800);
+    padding: 8px 12px;
+    font-weight: 700;
+    border-bottom: 1.5px solid var(--sage-300);
+}
+
+.lkpd-table td {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border-light);
+    color: var(--text-primary);
+    vertical-align: top;
+}
+
+.lkpd-table tr:last-child td {
+    border-bottom: none;
+}
+
+.table-textarea {
+    width: 100%;
+    font-family: inherit;
+    font-size: 0.78rem;
+    padding: 6px 8px;
+    border-radius: var(--radius-sm);
+    border: 1.5px solid var(--border-soft);
+    background-color: var(--cream-50);
+    color: var(--text-primary);
+    resize: vertical;
+    outline: none;
+    min-height: 48px;
+    margin-top: 4px;
+    transition: border-color var(--transition-fast);
+}
+
+.table-textarea:focus {
+    border-color: var(--sage-500);
+    background-color: #ffffff;
+}
+
+.table-input {
+    width: 100%;
+    font-family: inherit;
+    font-size: 0.78rem;
+    padding: 6px 8px;
+    border-radius: var(--radius-sm);
+    border: 1.5px solid var(--border-soft);
+    background-color: var(--cream-50);
+    outline: none;
+}
+
+.essay-section-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.essay-item {
+    background-color: #ffffff;
+    border: 1.5px solid var(--border-soft);
+    border-radius: var(--radius-md);
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.essay-textarea {
+    width: 100%;
+    font-family: inherit;
+    font-size: 0.8rem;
+    padding: 8px 10px;
+    border-radius: var(--radius-sm);
+    border: 1.5px solid var(--border-soft);
+    background-color: var(--cream-50);
+    color: var(--text-primary);
+    outline: none;
+    resize: vertical;
+    line-height: 1.45;
+    transition: all var(--transition-fast);
+}
+
+.essay-textarea:focus {
+    border-color: var(--sage-500);
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(85, 150, 94, 0.12);
+}
+
+/* Kotak Panduan Menulis */
+.guidance-box-mini {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin: 6px 0 10px;
+}
+
+.guidance-chip {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--sage-700);
+    background-color: var(--mint-100);
+    border: 1px solid var(--border-soft);
+    padding: 4px 10px;
+    border-radius: var(--radius-full);
+}
+
+.multi-paragraph-form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.p-field-label {
+    font-size: 0.74rem;
+    font-weight: 700;
+    color: var(--sage-700);
+    margin-bottom: 2px;
+    display: block;
+}
+
+/* Catatan Santun */
+.notice-card-polite {
+    background-color: var(--sage-50);
+    border-left: 3.5px solid var(--sage-500);
+    padding: 8px 12px;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.76rem;
+    color: var(--text-secondary);
+    margin-top: 6px;
+}
+
+.notice-icon {
+    color: var(--sage-600);
+    flex-shrink: 0;
+}
+
+/* Refleksi Siswa */
+.reflection-table td input[type="radio"] {
+    accent-color: var(--sage-600);
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.reflection-notes-box {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.ref-note-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.ref-note-item label {
+    font-size: 0.74rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+}
+
+.score-mini-banner {
+    background-color: var(--mint-100);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-md);
+    padding: 8px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--sage-800);
+}
+
+/* Rubrik Penilaian Matriks */
+.rubric-matrix-table th, .rubric-matrix-table td {
+    font-size: 0.72rem;
+    line-height: 1.35;
+    padding: 6px 8px;
+}
+
+.total-row {
+    background-color: var(--mint-50);
+    font-weight: 700;
+}
+
+/* Lembar Verifikasi Guru */
+.teacher-verification-card {
+    background-color: var(--cream-100);
+    border: 1.5px solid var(--sage-300);
+    border-radius: var(--radius-md);
+    padding: 14px 16px;
+}
+
+.scores-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.score-input-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.score-input-item label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+}
+
+.score-box {
+    text-align: center;
+    font-weight: 700;
+}
+
+.final-score-item {
+    grid-column: span 3;
+    background-color: var(--mint-100);
+    padding: 8px 12px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-soft);
+}
+
+.score-box-final {
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--sage-800);
+    text-align: center;
+    background-color: #ffffff;
+}
+
+.signature-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    font-size: 0.78rem;
+}
+
+.sig-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.sig-box-line {
+    width: 140px;
+    height: 45px;
+    border-bottom: 1.5px dashed var(--sage-400);
+    margin-bottom: 4px;
+}
+
+/* --------------------------------------------------------------------------
+   Gaya Halaman 8: Pusat Kuis & Evaluasi Belajar Interaktif
+   -------------------------------------------------------------------------- */
+.quiz-center-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.quiz-center-hero {
+    text-align: center;
+    padding: 14px 12px;
+    background: linear-gradient(135deg, var(--mint-100) 0%, var(--sage-100) 100%);
+    border-radius: var(--radius-lg);
+    border: 1.5px solid var(--border-soft);
+}
+
+.quiz-shield-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-full);
+    background-color: #ffffff;
+    color: var(--sage-600);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 8px;
+    box-shadow: var(--shadow-sm);
+}
+
+.quiz-center-title {
+    font-family: var(--font-heading);
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--sage-800);
+    margin-bottom: 4px;
+}
+
+.quiz-center-subtitle {
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    line-height: 1.45;
+    max-width: 450px;
+    margin: 0 auto;
+}
+
+/* Kartu Skor Kuis */
+.quiz-score-card {
+    background-color: #ffffff;
+    border: 2px solid var(--sage-300);
+    border-radius: var(--radius-lg);
+    padding: 16px 18px;
+    box-shadow: var(--shadow-md);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.score-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-light);
+    padding-bottom: 8px;
+}
+
+.score-card-tag {
+    font-size: 0.7rem;
+    font-weight: 800;
+    color: var(--sage-700);
+    letter-spacing: 0.06em;
+}
+
+.score-timestamp {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+}
+
+.score-main-display {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.score-circle-display {
+    width: 90px;
+    height: 90px;
+    border-radius: var(--radius-full);
+    background: linear-gradient(135deg, var(--mint-200) 0%, var(--sage-200) 100%);
+    border: 3px solid var(--sage-400);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 14px;
-    background-color: #fafdfa;
-    z-index: 5;
-    transition: opacity var(--transition-normal);
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(50, 100, 60, 0.12);
 }
 
-.page-loading-skeleton.is-hidden {
-    opacity: 0;
-    pointer-events: none;
+.score-number-big {
+    font-family: var(--font-heading);
+    font-size: 1.85rem;
+    font-weight: 800;
+    color: var(--sage-800);
+    line-height: 1;
 }
 
-.skeleton-spinner {
-    width: 36px;
-    height: 36px;
-    border: 3px solid var(--sage-200);
-    border-top-color: var(--sage-600);
-    border-radius: var(--radius-full);
-    animation: spin 0.9s linear infinite;
+.score-number-denom {
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: var(--sage-600);
 }
 
-.skeleton-text {
+.score-status-title {
+    font-family: var(--font-heading);
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--sage-800);
+    margin-bottom: 4px;
+}
+
+.score-status-desc {
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    line-height: 1.45;
+}
+
+.quiz-action-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.btn-check-action {
+    flex: 1;
+    font-size: 0.82rem;
+    padding: 8px 14px;
+}
+
+/* Rincian Analisis Kuis */
+.quiz-review-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.review-title {
+    font-family: var(--font-heading);
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--sage-800);
+    margin-bottom: 2px;
+}
+
+.review-item {
+    background-color: var(--cream-100);
+    border: 1.5px solid var(--border-soft);
+    border-radius: var(--radius-md);
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.review-item.is-correct {
+    border-color: #8edaa2;
+    background-color: #f1fbf3;
+}
+
+.review-item.is-wrong {
+    border-color: #f4c0be;
+    background-color: #fdf5f5;
+}
+
+.rev-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.rev-num {
+    font-weight: 700;
     font-size: 0.8rem;
-    font-weight: 600;
-    color: var(--text-muted);
+    color: var(--sage-800);
+}
+
+.rev-user-ans {
+    font-size: 0.76rem;
+    color: var(--text-secondary);
+}
+
+.rev-badge {
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: var(--radius-full);
+    background-color: var(--sage-200);
+    color: var(--sage-800);
+}
+
+.review-item.is-correct .rev-badge {
+    background-color: #d1f5db;
+    color: #1f6b33;
+}
+
+.review-item.is-wrong .rev-badge {
+    background-color: #fde0e0;
+    color: #9c2724;
+}
+
+.rev-explanation {
+    font-size: 0.76rem;
+    color: var(--text-primary);
+    line-height: 1.4;
+    padding-top: 4px;
+    border-top: 1px dashed var(--border-soft);
+}
+
+.self-assessment-guide {
+    background-color: var(--sage-50);
+    border: 1px solid var(--sage-200);
+    border-radius: var(--radius-md);
+    padding: 12px 14px;
+}
+
+.guide-title-mini {
+    font-family: var(--font-heading);
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--sage-800);
+    margin-bottom: 6px;
+}
+
+.guide-steps-list {
+    padding-left: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    font-size: 0.74rem;
+    color: var(--text-secondary);
+    line-height: 1.4;
 }
 
 /* --------------------------------------------------------------------------
@@ -674,7 +1536,7 @@ a {
    -------------------------------------------------------------------------- */
 .app-toolbar {
     position: fixed;
-    bottom: 18px;
+    bottom: 16px;
     left: 0;
     width: 100%;
     display: flex;
@@ -688,8 +1550,8 @@ a {
     pointer-events: auto;
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 8px 16px;
+    gap: 8px;
+    padding: 7px 16px;
     background: rgba(255, 255, 255, 0.94);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
@@ -707,13 +1569,13 @@ a {
 
 .toolbar-divider {
     width: 1px;
-    height: 24px;
+    height: 22px;
     background-color: var(--border-soft);
 }
 
 .tool-btn {
-    width: 38px;
-    height: 38px;
+    width: 36px;
+    height: 36px;
     border-radius: var(--radius-full);
     display: flex;
     align-items: center;
@@ -756,7 +1618,6 @@ a {
     background-color: var(--sage-100);
 }
 
-/* Pemilih Halaman Langsung */
 .page-selector-box {
     display: flex;
     flex-direction: column;
@@ -835,7 +1696,7 @@ a {
 }
 
 .modal-header {
-    padding: 18px 24px;
+    padding: 16px 22px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -867,6 +1728,12 @@ a {
     color: var(--sage-800);
 }
 
+.modal-subtitle-text {
+    font-size: 0.76rem;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
 .btn-close-modal {
     width: 34px;
     height: 34px;
@@ -884,27 +1751,27 @@ a {
 }
 
 .modal-body {
-    padding: 20px 24px;
+    padding: 20px 22px;
     overflow-y: auto;
 }
 
-/* Grid Daftar Halaman (Table of Contents) */
+/* Grid Daftar Halaman */
 .toc-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 14px;
+    gap: 12px;
 }
 
 .toc-card {
     background: var(--cream-100);
     border: 1.5px solid var(--border-light);
     border-radius: var(--radius-md);
-    padding: 14px 16px;
+    padding: 12px 14px;
     cursor: pointer;
     transition: all var(--transition-fast);
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 4px;
 }
 
 .toc-card:hover {
@@ -945,27 +1812,27 @@ a {
 
 .toc-card-title {
     font-family: var(--font-heading);
-    font-size: 0.95rem;
+    font-size: 0.92rem;
     font-weight: 700;
     color: var(--sage-800);
 }
 
 .toc-card-desc {
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     color: var(--text-secondary);
     line-height: 1.4;
 }
 
-/* Grid Petunjuk Penggunaan */
+/* Grid Petunjuk */
 .guide-grid {
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 12px;
 }
 
 .guide-item {
     display: flex;
-    gap: 14px;
+    gap: 12px;
     align-items: flex-start;
     padding: 12px 14px;
     border-radius: var(--radius-md);
@@ -974,8 +1841,8 @@ a {
 }
 
 .guide-icon-box {
-    width: 40px;
-    height: 40px;
+    width: 38px;
+    height: 38px;
     border-radius: var(--radius-md);
     background-color: var(--sage-100);
     color: var(--sage-700);
@@ -987,20 +1854,56 @@ a {
 
 .guide-text h4 {
     font-family: var(--font-heading);
-    font-size: 0.92rem;
+    font-size: 0.9rem;
     font-weight: 700;
     color: var(--sage-800);
-    margin-bottom: 4px;
+    margin-bottom: 3px;
 }
 
 .guide-text p {
-    font-size: 0.82rem;
+    font-size: 0.8rem;
     color: var(--text-secondary);
     line-height: 1.45;
 }
 
+/* Modal Kuis Terpandu */
+.modal-quiz-stepper {
+    max-width: 580px;
+}
+
+.modal-footer-quiz {
+    padding: 14px 22px;
+    border-top: 1px solid var(--border-light);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--cream-50);
+}
+
+.stepper-progress-dots {
+    display: flex;
+    gap: 8px;
+}
+
+.stepper-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: var(--radius-full);
+    background-color: var(--sage-200);
+    transition: all var(--transition-fast);
+}
+
+.stepper-dot.active {
+    background-color: var(--sage-600);
+    transform: scale(1.3);
+}
+
+.stepper-dot.answered {
+    background-color: var(--mint-400);
+}
+
 /* --------------------------------------------------------------------------
-   Loading Overlay Global yang Lucu
+   Loading Overlay Global
    -------------------------------------------------------------------------- */
 .global-loading-overlay {
     position: fixed;
@@ -1030,7 +1933,6 @@ a {
     align-items: center;
 }
 
-/* Animasi Buku Berputar Halus */
 .book-loader {
     width: 60px;
     height: 45px;
@@ -1112,76 +2014,8 @@ a {
     transition: width 0.3s ease;
 }
 
-/* --------------------------------------------------------------------------
-   Overlay Notifikasi Kesalahan
-   -------------------------------------------------------------------------- */
-.error-notice-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(20, 35, 23, 0.5);
-    backdrop-filter: blur(8px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 200;
-    padding: 20px;
-}
-
-.error-card {
-    background: var(--color-surface);
-    border-radius: var(--radius-lg);
-    border: 1.5px solid #f2c0bf;
-    padding: 28px;
-    max-width: 440px;
-    text-align: center;
-    box-shadow: var(--shadow-lg);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.error-icon-box {
-    width: 56px;
-    height: 56px;
-    border-radius: var(--radius-full);
-    background-color: #fdf0f0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 16px;
-}
-
-.error-title {
-    font-family: var(--font-heading);
-    font-size: 1.15rem;
-    font-weight: 700;
-    color: #a32724;
-    margin-bottom: 8px;
-}
-
-.error-desc {
-    font-size: 0.85rem;
-    color: var(--text-secondary);
-    line-height: 1.45;
-    margin-bottom: 20px;
-}
-
-.error-actions {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-
-/* --------------------------------------------------------------------------
-   Utilitas & Helper
-   -------------------------------------------------------------------------- */
 .is-hidden {
     display: none !important;
-}
-
-@keyframes spin {
-    to { transform: rotate(360deg); }
 }
 
 /* --------------------------------------------------------------------------
@@ -1219,16 +2053,53 @@ a {
     }
 
     .btn {
-        padding: 8px 10px;
+        padding: 7px 10px;
     }
 
     .side-nav-btn {
-        display: none; /* Di layar kecil navigasi menggunakan swipe atau toolbar */
+        display: none;
     }
 
     .book-stage {
-        padding: 14px 12px 85px;
-        min-height: calc(100vh - 160px);
+        padding: 8px 10px 75px;
+        min-height: auto;
+    }
+
+    .book-viewport {
+        height: calc(100vh - 145px);
+        max-height: none;
+        min-height: 380px;
+    }
+
+    .page-content.storybook-page {
+        padding: 16px 14px 22px;
+        gap: 10px;
+    }
+
+    .cover-title-main {
+        font-size: 1.15rem;
+    }
+
+    .id-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .guidance-box-mini {
+        grid-template-columns: 1fr;
+    }
+
+    .scores-summary-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .final-score-item {
+        grid-column: span 2;
+    }
+
+    .score-main-display {
+        flex-direction: column;
+        text-align: center;
+        gap: 12px;
     }
 
     .tip-banner {
@@ -1237,13 +2108,13 @@ a {
     }
 
     .toolbar-pill {
-        padding: 6px 12px;
+        padding: 6px 10px;
         gap: 6px;
     }
 
     .tool-btn {
-        width: 34px;
-        height: 34px;
+        width: 32px;
+        height: 32px;
     }
 
     .page-count-text {
@@ -1251,7 +2122,7 @@ a {
     }
 
     .page-select {
-        font-size: 0.75rem;
+        font-size: 0.74rem;
     }
 
     .toc-grid {

@@ -7,7 +7,7 @@
     <meta name="description" content="Flipbook Interaktif LKPD Evaluasi Pemahaman Materi Teks Diskusi Bahasa Indonesia Kelas X Fase E Semester Ganjil.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Quicksand:wght@500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -85,6 +85,13 @@
                 </div>
 
                 <div class="header-actions">
+                    <button id="btn-jump-quiz" class="btn btn-quiz-highlight" title="Buka Pusat Kuis Interaktif">
+                        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                        <span class="btn-text">Kuis Interaktif</span>
+                    </button>
                     <button id="btn-open-toc" class="btn btn-outline" title="Buka Daftar Halaman">
                         <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <rect x="3" y="3" width="7" height="7" rx="1.5"/>
@@ -122,7 +129,7 @@
                     <line x1="12" y1="16" x2="12" y2="12"/>
                     <line x1="12" y1="8" x2="12.01" y2="8"/>
                 </svg>
-                <span>Klik sudut halaman, seret kursor, gunakan tombol panah, atau geser layar untuk membalik halaman buku interaktif.</span>
+                <span>Format buku berbasis HTML interaktif. Kamu dapat menjawab kuis pilihan ganda, mengetik jawaban, serta memeriksa skor otomatis pada halaman 8.</span>
             </div>
             <button id="btn-close-tip" class="btn-close-tip" aria-label="Tutup petunjuk">
                 <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -145,103 +152,958 @@
             <div class="book-viewport" id="book-viewport">
                 <div class="book-zoom-wrapper" id="zoom-wrapper">
                     <div class="book-depth-layer" id="book-depth">
-                        <!-- Flipbook element where StPageFlip will mount -->
+                        <!-- Native HTML Flipbook Container -->
                         <div id="flipbook" class="flipbook">
-                            <!-- Page 1 (Front Cover) -->
-                            <div class="page" data-density="hard">
-                                <div class="page-content" id="page-content-1">
-                                    <div class="page-loading-skeleton" id="skeleton-1">
-                                        <div class="skeleton-spinner"></div>
-                                        <p class="skeleton-text">Memuat Halaman 1...</p>
+                            
+                            <!-- ==========================================
+                                 HALAMAN 1: Sampul Depan & Petunjuk Awal
+                                 ========================================== -->
+                            <div class="page page-cover-front" data-density="hard">
+                                <div class="page-content storybook-page">
+                                    <div class="book-page-header">
+                                        <span class="header-tag">LKPD Evaluasi Teks Diskusi</span>
+                                        <span class="header-page-num">Halaman 1</span>
                                     </div>
-                                    <canvas id="pdf-canvas-1" class="page-canvas"></canvas>
+
+                                    <div class="cover-hero-card">
+                                        <div class="cover-badge-top">MODUL PEMBELAJARAN DIGITAL</div>
+                                        <h2 class="cover-title-main">LEMBAR KERJA PESERTA DIDIK</h2>
+                                        <h3 class="cover-title-sub">(LKPD)</h3>
+                                        <div class="cover-divider-leaf">
+                                            <span class="divider-line"></span>
+                                            <svg class="divider-leaf-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M12 2L12 22"/>
+                                                <path d="M17 7C14 7 12 9 12 12C12 9 10 7 7 7"/>
+                                                <path d="M19 13C16 13 12 14 12 17C12 14 8 13 5 13"/>
+                                            </svg>
+                                            <span class="divider-line"></span>
+                                        </div>
+                                        <h4 class="cover-topic">Evaluasi Pemahaman Materi Teks Diskusi</h4>
+                                        <p class="cover-meta-info">Bab I: Berbagi Argumentasi dalam Teks Diskusi | Bahasa Indonesia | Kelas X (Fase E) | Semester Ganjil</p>
+                                    </div>
+
+                                    <!-- Identitas Penyusun Modul -->
+                                    <div class="creator-box">
+                                        <div class="creator-row"><span class="c-label">Penyusun:</span> <span class="c-val">Atari Regita Putri</span></div>
+                                        <div class="creator-row"><span class="c-label">NPM / Kelas:</span> <span class="c-val">2513041095 / 3C</span></div>
+                                        <div class="creator-row"><span class="c-label">Mata Kuliah:</span> <span class="c-val">Menulis Modul</span></div>
+                                        <div class="creator-row"><span class="c-label">Dosen Pengampu:</span> <span class="c-val">1. Dr. Siti Samhati, M.Pd. | 2. Septia Uswatun Hasanah, M.Pd.</span></div>
+                                    </div>
+
+                                    <!-- Form Identitas Siswa -->
+                                    <div class="student-id-card">
+                                        <h5 class="card-mini-title">Identitas Peserta Didik</h5>
+                                        <div class="id-grid">
+                                            <div class="id-field">
+                                                <label for="inp-nama">Nama Lengkap:</label>
+                                                <input type="text" id="inp-nama" class="form-input" placeholder="Tuliskan nama lengkapmu...">
+                                            </div>
+                                            <div class="id-field">
+                                                <label for="inp-absen">Kelas / No. Absen:</label>
+                                                <input type="text" id="inp-absen" class="form-input" placeholder="Contoh: X-1 / 14">
+                                            </div>
+                                            <div class="id-field">
+                                                <label for="inp-kelompok">Kelompok:</label>
+                                                <input type="text" id="inp-kelompok" class="form-input" placeholder="Nomor kelompok...">
+                                            </div>
+                                            <div class="id-field">
+                                                <label for="inp-tanggal">Hari / Tanggal:</label>
+                                                <input type="text" id="inp-tanggal" class="form-input" placeholder="Senin, 22 November">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Tujuan & Petunjuk -->
+                                    <div class="instruction-box">
+                                        <h5 class="box-title">A. Tujuan Pembelajaran</h5>
+                                        <ul class="clean-bullet-list">
+                                            <li>Memahami isi dan struktur teks diskusi.</li>
+                                            <li>Menganalisis dan menginterpretasi pandangan dalam teks diskusi.</li>
+                                            <li>Menilai kualitas argumen dan kredibilitas informasi.</li>
+                                            <li>Menulis teks diskusi singkat secara runtut.</li>
+                                            <li>Menyampaikan argumen secara jelas, logis, kritis, dan santun.</li>
+                                        </ul>
+
+                                        <h5 class="box-title" style="margin-top: 10px;">B. Petunjuk Pengerjaan</h5>
+                                        <ol class="clean-num-list">
+                                            <li>Berdoalah sebelum mengerjakan.</li>
+                                            <li>Baca teks stimulus dengan cermat sebelum menjawab soal.</li>
+                                            <li>Kerjakan Bagian A sampai C secara individu, Bagian D secara individu, dan Bagian E secara berkelompok.</li>
+                                            <li>Tulis jawabanmu dengan bahasa yang baik dan benar.</li>
+                                            <li>Tanyakan kepada guru jika ada hal yang kurang jelas.</li>
+                                        </ol>
+                                    </div>
+
                                     <div class="page-corner-hint corner-right"></div>
                                 </div>
                             </div>
 
-                            <!-- Page 2 -->
+                            <!-- ==========================================
+                                 HALAMAN 2: Teks Stimulus & Pilihan Ganda 1-3
+                                 ========================================== -->
                             <div class="page" data-density="soft">
-                                <div class="page-content" id="page-content-2">
-                                    <div class="page-loading-skeleton" id="skeleton-2">
-                                        <div class="skeleton-spinner"></div>
-                                        <p class="skeleton-text">Memuat Halaman 2...</p>
+                                <div class="page-content storybook-page">
+                                    <div class="book-page-header">
+                                        <span class="header-tag">LKPD Evaluasi Teks Diskusi</span>
+                                        <span class="header-page-num">Halaman 2</span>
                                     </div>
-                                    <canvas id="pdf-canvas-2" class="page-canvas"></canvas>
+
+                                    <!-- Bagian C: Teks Stimulus -->
+                                    <div class="stimulus-wrapper">
+                                        <div class="section-badge-pill">C. Teks Stimulus</div>
+                                        <h3 class="stimulus-main-title">Perlukah Siswa Membawa Ponsel ke Sekolah?</h3>
+                                        <div class="stimulus-article">
+                                            <p class="article-p"><span class="drop-cap">P</span>onsel kini hampir tidak terpisahkan dari kehidupan remaja. Di sekolah, keberadaan ponsel memunculkan perdebatan: apakah siswa sebaiknya diizinkan membawa ponsel atau justru dilarang sama sekali? Perdebatan ini melibatkan guru, orang tua, dan siswa sendiri, dan masing-masing memiliki pandangan yang berbeda.</p>
+                                            <p class="article-p">Kelompok yang setuju berpendapat bahwa ponsel dapat menjadi alat belajar yang efektif. Dengan ponsel, siswa dapat mencari referensi, membuka kamus daring, dan mengakses materi tambahan secara cepat. Selain itu, ponsel memudahkan orang tua menghubungi anaknya saat keadaan darurat. Sebuah sekolah yang menerapkan pembelajaran berbasis ponsel melaporkan bahwa siswa menjadi lebih aktif mencari informasi (data ilustrasi).</p>
+                                            <p class="article-p">Sebaliknya, kelompok yang tidak setuju menilai ponsel lebih banyak menimbulkan gangguan. Siswa dikhawatirkan membuka media sosial atau bermain gim saat pelajaran berlangsung sehingga perhatian mereka terpecah. Ponsel juga berpotensi digunakan untuk menyontek ketika ujian dan memicu perundungan di dunia maya. Menurut seorang guru bimbingan konseling, kasus perundungan daring antarsiswa meningkat sejak ponsel bebas dibawa ke kelas.</p>
+                                            <p class="article-p">Berdasarkan kedua pandangan tersebut, ponsel tidak dapat dikatakan sepenuhnya baik atau buruk. Dampaknya bergantung pada cara penggunaannya. Oleh karena itu, solusi yang dapat dipertimbangkan adalah mengizinkan siswa membawa ponsel dengan aturan yang jelas, misalnya hanya boleh digunakan atas izin guru untuk kegiatan pembelajaran.</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Bagian D: Soal Evaluasi A (PG 1, 2, 3) -->
+                                    <div class="quiz-section-wrapper">
+                                        <div class="section-badge-pill">D. Soal Evaluasi - Bagian A. Pemahaman (Pilihan Ganda)</div>
+                                        <p class="quiz-instruction-note">Pilihlah satu jawaban yang paling tepat dengan memilih opsi di bawah ini:</p>
+
+                                        <!-- Soal 1 -->
+                                        <div class="quiz-item" data-q="1">
+                                            <div class="q-header">
+                                                <span class="q-num">1.</span>
+                                                <p class="q-text">Ciri utama teks diskusi adalah ....</p>
+                                            </div>
+                                            <div class="quiz-options-group">
+                                                <label class="quiz-opt-label">
+                                                    <input type="radio" name="quiz_q1" value="A" class="quiz-radio">
+                                                    <span class="opt-indicator">A</span>
+                                                    <span class="opt-desc">memuat satu pendapat tanpa pendapat lain</span>
+                                                </label>
+                                                <label class="quiz-opt-label">
+                                                    <input type="radio" name="quiz_q1" value="B" class="quiz-radio">
+                                                    <span class="opt-indicator">B</span>
+                                                    <span class="opt-desc">memuat berbagai sudut pandang terhadap suatu permasalahan</span>
+                                                </label>
+                                                <label class="quiz-opt-label">
+                                                    <input type="radio" name="quiz_q1" value="C" class="quiz-radio">
+                                                    <span class="opt-indicator">C</span>
+                                                    <span class="opt-desc">bertujuan menghibur pembaca dengan cerita</span>
+                                                </label>
+                                                <label class="quiz-opt-label">
+                                                    <input type="radio" name="quiz_q1" value="D" class="quiz-radio">
+                                                    <span class="opt-indicator">D</span>
+                                                    <span class="opt-desc">berisi urutan langkah melakukan sesuatu</span>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <!-- Soal 2 -->
+                                        <div class="quiz-item" data-q="2">
+                                            <div class="q-header">
+                                                <span class="q-num">2.</span>
+                                                <p class="q-text">Isu yang dibahas dalam teks stimulus adalah ....</p>
+                                            </div>
+                                            <div class="quiz-options-group">
+                                                <label class="quiz-opt-label">
+                                                    <input type="radio" name="quiz_q2" value="A" class="quiz-radio">
+                                                    <span class="opt-indicator">A</span>
+                                                    <span class="opt-desc">manfaat media sosial bagi remaja</span>
+                                                </label>
+                                                <label class="quiz-opt-label">
+                                                    <input type="radio" name="quiz_q2" value="B" class="quiz-radio">
+                                                    <span class="opt-indicator">B</span>
+                                                    <span class="opt-desc">cara mencegah perundungan di sekolah</span>
+                                                </label>
+                                                <label class="quiz-opt-label">
+                                                    <input type="radio" name="quiz_q2" value="C" class="quiz-radio">
+                                                    <span class="opt-indicator">C</span>
+                                                    <span class="opt-desc">perlu tidaknya siswa membawa ponsel ke sekolah</span>
+                                                </label>
+                                                <label class="quiz-opt-label">
+                                                    <input type="radio" name="quiz_q2" value="D" class="quiz-radio">
+                                                    <span class="opt-indicator">D</span>
+                                                    <span class="opt-desc">penggunaan internet di rumah</span>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <!-- Soal 3 (Awal) -->
+                                        <div class="quiz-item" data-q="3">
+                                            <div class="q-header">
+                                                <span class="q-num">3.</span>
+                                                <p class="q-text">Pernyataan berikut yang termasuk argumen pendukung (pro) adalah ....</p>
+                                            </div>
+                                            <div class="quiz-options-group">
+                                                <label class="quiz-opt-label">
+                                                    <input type="radio" name="quiz_q3" value="A" class="quiz-radio">
+                                                    <span class="opt-indicator">A</span>
+                                                    <span class="opt-desc">Siswa dapat menyontek saat ujian.</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div class="page-corner-hint corner-left"></div>
                                 </div>
                             </div>
 
-                            <!-- Page 3 -->
+                            <!-- ==========================================
+                                 HALAMAN 3: Pilihan Ganda 3-5 & Uraian Bagian B
+                                 ========================================== -->
                             <div class="page" data-density="soft">
-                                <div class="page-content" id="page-content-3">
-                                    <div class="page-loading-skeleton" id="skeleton-3">
-                                        <div class="skeleton-spinner"></div>
-                                        <p class="skeleton-text">Memuat Halaman 3...</p>
+                                <div class="page-content storybook-page">
+                                    <div class="book-page-header">
+                                        <span class="header-tag">LKPD Evaluasi Teks Diskusi</span>
+                                        <span class="header-page-num">Halaman 3</span>
                                     </div>
-                                    <canvas id="pdf-canvas-3" class="page-canvas"></canvas>
+
+                                    <div class="quiz-section-wrapper">
+                                        <!-- Kelanjutan Soal 3 -->
+                                        <div class="quiz-item continuation-item" data-q="3">
+                                            <div class="quiz-options-group">
+                                                <label class="quiz-opt-label">
+                                                    <input type="radio" name="quiz_q3" value="B" class="quiz-radio">
+                                                    <span class="opt-indicator">B</span>
+                                                    <span class="opt-desc">Perhatian siswa terpecah oleh media sosial.</span>
+                                                </label>
+                                                <label class="quiz-opt-label">
+                                                    <input type="radio" name="quiz_q3" value="C" class="quiz-radio">
+                                                    <span class="opt-indicator">C</span>
+                                                    <span class="opt-desc">Ponsel memudahkan siswa mencari referensi dan kamus daring.</span>
+                                                </label>
+                                                <label class="quiz-opt-label">
+                                                    <input type="radio" name="quiz_q3" value="D" class="quiz-radio">
+                                                    <span class="opt-indicator">D</span>
+                                                    <span class="opt-desc">Perundungan daring meningkat di sekolah.</span>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <!-- Soal 4 -->
+                                        <div class="quiz-item" data-q="4">
+                                            <div class="q-header">
+                                                <span class="q-num">4.</span>
+                                                <p class="q-text">Makna kata terpecah pada kalimat "perhatian mereka terpecah" adalah ....</p>
+                                            </div>
+                                            <div class="quiz-options-group">
+                                                <label class="quiz-opt-label">
+                                                    <input type="radio" name="quiz_q4" value="A" class="quiz-radio">
+                                                    <span class="opt-indicator">A</span>
+                                                    <span class="opt-desc">rusak</span>
+                                                </label>
+                                                <label class="quiz-opt-label">
+                                                    <input type="radio" name="quiz_q4" value="B" class="quiz-radio">
+                                                    <span class="opt-indicator">B</span>
+                                                    <span class="opt-desc">terbagi ke banyak hal sehingga tidak fokus</span>
+                                                </label>
+                                                <label class="quiz-opt-label">
+                                                    <input type="radio" name="quiz_q4" value="C" class="quiz-radio">
+                                                    <span class="opt-indicator">C</span>
+                                                    <span class="opt-desc">hilang sepenuhnya</span>
+                                                </label>
+                                                <label class="quiz-opt-label">
+                                                    <input type="radio" name="quiz_q4" value="D" class="quiz-radio">
+                                                    <span class="opt-indicator">D</span>
+                                                    <span class="opt-desc">bertambah kuat</span>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <!-- Soal 5 -->
+                                        <div class="quiz-item" data-q="5">
+                                            <div class="q-header">
+                                                <span class="q-num">5.</span>
+                                                <p class="q-text">Bagian teks stimulus yang berfungsi sebagai simpulan atau penyelesaian terdapat pada paragraf ....</p>
+                                            </div>
+                                            <div class="quiz-options-group">
+                                                <label class="quiz-opt-label">
+                                                    <input type="radio" name="quiz_q5" value="A" class="quiz-radio">
+                                                    <span class="opt-indicator">A</span>
+                                                    <span class="opt-desc">pertama</span>
+                                                </label>
+                                                <label class="quiz-opt-label">
+                                                    <input type="radio" name="quiz_q5" value="B" class="quiz-radio">
+                                                    <span class="opt-indicator">B</span>
+                                                    <span class="opt-desc">kedua</span>
+                                                </label>
+                                                <label class="quiz-opt-label">
+                                                    <input type="radio" name="quiz_q5" value="C" class="quiz-radio">
+                                                    <span class="opt-indicator">C</span>
+                                                    <span class="opt-desc">ketiga</span>
+                                                </label>
+                                                <label class="quiz-opt-label">
+                                                    <input type="radio" name="quiz_q5" value="D" class="quiz-radio">
+                                                    <span class="opt-indicator">D</span>
+                                                    <span class="opt-desc">keempat</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Bagian B: Analisis dan Interpretasi (Uraian) -->
+                                    <div class="essay-section-wrapper">
+                                        <div class="section-badge-pill">Bagian B. Analisis dan Interpretasi (Uraian)</div>
+
+                                        <!-- Soal 6: Tabel Pro Kontra -->
+                                        <div class="essay-item">
+                                            <div class="q-header">
+                                                <span class="q-num">6.</span>
+                                                <p class="q-text">Kelompokkan argumen dalam teks stimulus ke dalam tabel berikut.</p>
+                                            </div>
+                                            <div class="table-card-wrapper">
+                                                <table class="lkpd-table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="width: 50%;">Argumen yang mendukung (pro)</th>
+                                                            <th style="width: 50%;">Argumen yang menentang (kontra)</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>
+                                                                <span class="item-index">1.</span>
+                                                                <textarea class="table-textarea" placeholder="Tuliskan argumen pro 1..."></textarea>
+                                                            </td>
+                                                            <td>
+                                                                <span class="item-index">1.</span>
+                                                                <textarea class="table-textarea" placeholder="Tuliskan argumen kontra 1..."></textarea>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <span class="item-index">2.</span>
+                                                                <textarea class="table-textarea" placeholder="Tuliskan argumen pro 2..."></textarea>
+                                                            </td>
+                                                            <td>
+                                                                <span class="item-index">2.</span>
+                                                                <textarea class="table-textarea" placeholder="Tuliskan argumen kontra 2..."></textarea>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <span class="item-index">3.</span>
+                                                                <textarea class="table-textarea" placeholder="Tuliskan argumen pro 3..."></textarea>
+                                                            </td>
+                                                            <td>
+                                                                <span class="item-index">3.</span>
+                                                                <textarea class="table-textarea" placeholder="Tuliskan argumen kontra 3..."></textarea>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+
+                                        <!-- Soal 7 -->
+                                        <div class="essay-item">
+                                            <div class="q-header">
+                                                <span class="q-num">7.</span>
+                                                <p class="q-text">Pada paragraf keempat disebutkan, "Dampaknya bergantung pada cara penggunaannya." Jelaskan maksud kalimat tersebut dengan kata-katamu sendiri dan hubungkan dengan kedua pandangan pada paragraf kedua dan ketiga.</p>
+                                            </div>
+                                            <textarea class="essay-textarea" rows="3" placeholder="Tuliskan penjelasan dan analisismu di sini..."></textarea>
+                                        </div>
+
+                                        <!-- Soal 8 -->
+                                        <div class="essay-item">
+                                            <div class="q-header">
+                                                <span class="q-num">8.</span>
+                                                <p class="q-text">Apa sikapmu terhadap isu dalam teks? Nyatakan sikapmu dan berikan dua alasan yang sesuai dengan isi teks.</p>
+                                            </div>
+                                            <textarea class="essay-textarea" rows="3" placeholder="Tuliskan sikapmu beserta 2 alasan yang relevan..."></textarea>
+                                        </div>
+                                    </div>
+
                                     <div class="page-corner-hint corner-right"></div>
                                 </div>
                             </div>
 
-                            <!-- Page 4 -->
+                            <!-- ==========================================
+                                 HALAMAN 4: Bagian C Uraian & Bagian D Penulisan
+                                 ========================================== -->
                             <div class="page" data-density="soft">
-                                <div class="page-content" id="page-content-4">
-                                    <div class="page-loading-skeleton" id="skeleton-4">
-                                        <div class="skeleton-spinner"></div>
-                                        <p class="skeleton-text">Memuat Halaman 4...</p>
+                                <div class="page-content storybook-page">
+                                    <div class="book-page-header">
+                                        <span class="header-tag">LKPD Evaluasi Teks Diskusi</span>
+                                        <span class="header-page-num">Halaman 4</span>
                                     </div>
-                                    <canvas id="pdf-canvas-4" class="page-canvas"></canvas>
+
+                                    <!-- Bagian C: Penilaian (Uraian) -->
+                                    <div class="essay-section-wrapper">
+                                        <div class="section-badge-pill">Bagian C. Penilaian (Uraian)</div>
+
+                                        <!-- Soal 9 -->
+                                        <div class="essay-item">
+                                            <div class="q-header">
+                                                <span class="q-num">9.</span>
+                                                <p class="q-text">Perhatikan argumen kelompok kontra pada paragraf ketiga. Menurutmu, apakah argumen tersebut didukung bukti yang kuat? Jelaskan penilaianmu.</p>
+                                            </div>
+                                            <textarea class="essay-textarea" rows="3" placeholder="Tuliskan analisis kekuatan bukti argumen kontra..."></textarea>
+                                        </div>
+
+                                        <!-- Soal 10 -->
+                                        <div class="essay-item">
+                                            <div class="q-header">
+                                                <span class="q-num">10.</span>
+                                                <p class="q-text">Teks stimulus mengutip "data ilustrasi" dari sebuah sekolah dan pendapat seorang guru bimbingan konseling. Bagaimana kredibilitas kedua sumber tersebut? Informasi apa yang perlu ditambahkan agar sumber lebih dapat dipercaya?</p>
+                                            </div>
+                                            <textarea class="essay-textarea" rows="3" placeholder="Tuliskan evaluasi kredibilitas sumber data di sini..."></textarea>
+                                        </div>
+                                    </div>
+
+                                    <!-- Bagian D: Penulisan -->
+                                    <div class="essay-section-wrapper" style="margin-top: 16px;">
+                                        <div class="section-badge-pill">Bagian D. Penulisan</div>
+
+                                        <!-- Soal 11: Menulis Teks Diskusi -->
+                                        <div class="essay-item">
+                                            <div class="q-header">
+                                                <span class="q-num">11.</span>
+                                                <p class="q-text">Tulislah teks diskusi singkat (4 paragraf) dengan isu <strong>"Perlukah pekerjaan rumah (PR) dihapuskan?"</strong>. Teksmu harus memuat:</p>
+                                            </div>
+
+                                            <div class="guidance-box-mini">
+                                                <div class="guidance-chip">Paragraf 1: Pengenalan isu</div>
+                                                <div class="guidance-chip">Paragraf 2: Dua argumen pendukung</div>
+                                                <div class="guidance-chip">Paragraf 3: Dua argumen penentang</div>
+                                                <div class="guidance-chip">Paragraf 4: Simpulan atau saran penyelesaian</div>
+                                            </div>
+
+                                            <div class="multi-paragraph-form">
+                                                <div class="p-field">
+                                                    <label class="p-field-label">Paragraf 1 (Pengenalan Isu):</label>
+                                                    <textarea class="essay-textarea" rows="2" placeholder="Tuliskan paragraf pengenalan isu PR di sini..."></textarea>
+                                                </div>
+                                                <div class="p-field">
+                                                    <label class="p-field-label">Paragraf 2 (Argumen Pendukung / Pro):</label>
+                                                    <textarea class="essay-textarea" rows="2" placeholder="Tuliskan dua argumen pro disertai alasan/contoh..."></textarea>
+                                                </div>
+                                                <div class="p-field">
+                                                    <label class="p-field-label">Paragraf 3 (Argumen Penentang / Kontra):</label>
+                                                    <textarea class="essay-textarea" rows="2" placeholder="Tuliskan dua argumen kontra disertai alasan/contoh..."></textarea>
+                                                </div>
+                                                <div class="p-field">
+                                                    <label class="p-field-label">Paragraf 4 (Simpulan & Solusi):</label>
+                                                    <textarea class="essay-textarea" rows="2" placeholder="Tuliskan simpulan yang seimbang dan saran solusi..."></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div class="page-corner-hint corner-left"></div>
                                 </div>
                             </div>
 
-                            <!-- Page 5 -->
+                            <!-- ==========================================
+                                 HALAMAN 5: Diskusi Kelompok, Refleksi & Skor A
+                                 ========================================== -->
                             <div class="page" data-density="soft">
-                                <div class="page-content" id="page-content-5">
-                                    <div class="page-loading-skeleton" id="skeleton-5">
-                                        <div class="skeleton-spinner"></div>
-                                        <p class="skeleton-text">Memuat Halaman 5...</p>
+                                <div class="page-content storybook-page">
+                                    <div class="book-page-header">
+                                        <span class="header-tag">LKPD Evaluasi Teks Diskusi</span>
+                                        <span class="header-page-num">Halaman 5</span>
                                     </div>
-                                    <canvas id="pdf-canvas-5" class="page-canvas"></canvas>
+
+                                    <!-- Soal 12: Simulasi Diskusi -->
+                                    <div class="essay-section-wrapper">
+                                        <div class="q-header">
+                                            <span class="q-num">12.</span>
+                                            <p class="q-text">Lakukan simulasi forum diskusi dalam kelompok (4-5 orang) dengan isu "Perlukah siswa membawa ponsel ke sekolah?". Siapkan bahan berikut sebelum berdiskusi, lalu sampaikan secara lisan.</p>
+                                        </div>
+
+                                        <div class="table-card-wrapper">
+                                            <table class="lkpd-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="width: 40%;">Bahan Persiapan</th>
+                                                        <th style="width: 60%;">Jawaban / Catatan Kelompok</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td><strong>Sikap kelompok</strong> (setuju / tidak setuju)</td>
+                                                        <td><input type="text" class="table-input" placeholder="Tuliskan sikap kelompok..."></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Argumen 1</strong> dan buktinya</td>
+                                                        <td><textarea class="table-textarea" rows="2" placeholder="Argumen 1 dan bukti pendukung..."></textarea></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Argumen 2</strong> dan buktinya</td>
+                                                        <td><textarea class="table-textarea" rows="2" placeholder="Argumen 2 dan bukti pendukung..."></textarea></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Tanggapan</strong> terhadap kemungkinan argumen lawan</td>
+                                                        <td><textarea class="table-textarea" rows="2" placeholder="Strategi sanggahan santun..."></textarea></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Simpulan</strong> kelompok</td>
+                                                        <td><textarea class="table-textarea" rows="2" placeholder="Simpulan akhir diskusi kelompok..."></textarea></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <div class="notice-card-polite">
+                                            <svg class="notice-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <circle cx="12" cy="12" r="10"/>
+                                                <line x1="12" y1="16" x2="12" y2="12"/>
+                                                <line x1="12" y1="8" x2="12.01" y2="8"/>
+                                            </svg>
+                                            <p><strong>Ingat:</strong> gunakan kalimat santun saat menanggapi, misalnya <em>"Saya memahami pendapat Anda, namun menurut saya ..."</em> atau <em>"Izinkan saya menambahkan ..."</em>.</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- E. Refleksi Peserta Didik -->
+                                    <div class="reflection-wrapper" style="margin-top: 14px;">
+                                        <div class="section-badge-pill">E. Refleksi Peserta Didik</div>
+                                        <div class="table-card-wrapper">
+                                            <table class="lkpd-table reflection-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Pernyataan Refleksi</th>
+                                                        <th style="width: 75px; text-align: center;">Ya</th>
+                                                        <th style="width: 75px; text-align: center;">Belum</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>Saya dapat menjelaskan ciri dan struktur teks diskusi.</td>
+                                                        <td style="text-align: center;"><input type="radio" name="ref_1" value="ya"></td>
+                                                        <td style="text-align: center;"><input type="radio" name="ref_1" value="belum"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Saya dapat membedakan argumen pro dan kontra.</td>
+                                                        <td style="text-align: center;"><input type="radio" name="ref_2" value="ya"></td>
+                                                        <td style="text-align: center;"><input type="radio" name="ref_2" value="belum"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Saya dapat menilai kekuatan argumen dan sumber informasi.</td>
+                                                        <td style="text-align: center;"><input type="radio" name="ref_3" value="ya"></td>
+                                                        <td style="text-align: center;"><input type="radio" name="ref_3" value="belum"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Saya dapat menulis teks diskusi dengan runtut.</td>
+                                                        <td style="text-align: center;"><input type="radio" name="ref_4" value="ya"></td>
+                                                        <td style="text-align: center;"><input type="radio" name="ref_4" value="belum"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Saya berani menyampaikan pendapat secara santun dalam forum.</td>
+                                                        <td style="text-align: center;"><input type="radio" name="ref_5" value="ya"></td>
+                                                        <td style="text-align: center;"><input type="radio" name="ref_5" value="belum"></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <div class="reflection-notes-box">
+                                            <div class="ref-note-item">
+                                                <label>Bagian yang masih sulit bagiku:</label>
+                                                <input type="text" class="form-input" placeholder="Tuliskan bagian materi yang masih dirasa sulit...">
+                                            </div>
+                                            <div class="ref-note-item">
+                                                <label>Yang akan kulakukan untuk memperbaikinya:</label>
+                                                <input type="text" class="form-input" placeholder="Rencana belajarmu...">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Bagian F Awal: Pembagian Skor Bagian A -->
+                                    <div class="guidelines-snippet" style="margin-top: 14px;">
+                                        <div class="section-badge-pill">F. Pedoman Penilaian (untuk Guru)</div>
+                                        <div class="score-mini-banner">
+                                            <span class="score-title">Bagian A: Pilihan Ganda (5 Soal)</span>
+                                            <span class="score-val">Skor Maksimal: 20 poin (Benar = 4, Salah = 0)</span>
+                                        </div>
+                                    </div>
+
                                     <div class="page-corner-hint corner-right"></div>
                                 </div>
                             </div>
 
-                            <!-- Page 6 -->
+                            <!-- ==========================================
+                                 HALAMAN 6: Rubrik Menulis Teks Diskusi
+                                 ========================================== -->
                             <div class="page" data-density="soft">
-                                <div class="page-content" id="page-content-6">
-                                    <div class="page-loading-skeleton" id="skeleton-6">
-                                        <div class="skeleton-spinner"></div>
-                                        <p class="skeleton-text">Memuat Halaman 6...</p>
+                                <div class="page-content storybook-page">
+                                    <div class="book-page-header">
+                                        <span class="header-tag">LKPD Evaluasi Teks Diskusi</span>
+                                        <span class="header-page-num">Halaman 6</span>
                                     </div>
-                                    <canvas id="pdf-canvas-6" class="page-canvas"></canvas>
+
+                                    <div class="rubric-section-wrapper">
+                                        <!-- Tabel Pembagian Skor Lengkap -->
+                                        <div class="section-badge-pill">1. Tabel Pembagian Skor Keseluruhan</div>
+                                        <div class="table-card-wrapper">
+                                            <table class="lkpd-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="width: 15%;">Bagian</th>
+                                                        <th style="width: 35%;">Bentuk Penilaian</th>
+                                                        <th style="width: 15%; text-align: center;">Skor Maks.</th>
+                                                        <th style="width: 35%;">Cara Menilai</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td><strong>Bagian A</strong></td>
+                                                        <td>Pilihan ganda (5 soal)</td>
+                                                        <td style="text-align: center;">20</td>
+                                                        <td>Benar = 4, salah = 0</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Bagian B</strong></td>
+                                                        <td>Uraian (soal 6, 7, 8)</td>
+                                                        <td style="text-align: center;">20</td>
+                                                        <td>Soal 6 = 8, soal 7 = 6, soal 8 = 6</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Bagian C</strong></td>
+                                                        <td>Uraian (soal 9, 10)</td>
+                                                        <td style="text-align: center;">15</td>
+                                                        <td>Soal 9 = 8, soal 10 = 7</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Bagian D</strong></td>
+                                                        <td>Menulis teks diskusi</td>
+                                                        <td style="text-align: center;">25</td>
+                                                        <td>Rubrik 1 (skor x 1,25)</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Bagian E</strong></td>
+                                                        <td>Penyampaian argumen</td>
+                                                        <td style="text-align: center;">20</td>
+                                                        <td>Rubrik 2 (skor x 1,25)</td>
+                                                    </tr>
+                                                    <tr class="total-row">
+                                                        <td colspan="2"><strong>Total Skor Maksimal</strong></td>
+                                                        <td style="text-align: center;"><strong>100</strong></td>
+                                                        <td><strong>Nilai akhir = jumlah skor A sampai E</strong></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <!-- Rubrik Bagian D: Menulis Teks Diskusi -->
+                                        <div class="section-badge-pill" style="margin-top: 14px;">2. Rubrik Bagian D (Menulis Teks Diskusi)</div>
+                                        <div class="table-card-wrapper">
+                                            <table class="lkpd-table rubric-matrix-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="width: 20%;">Kriteria</th>
+                                                        <th style="width: 20%;">4 (Sangat baik)</th>
+                                                        <th style="width: 20%;">3 (Baik)</th>
+                                                        <th style="width: 20%;">2 (Cukup)</th>
+                                                        <th style="width: 20%;">1 (Kurang)</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td><strong>Isi dan struktur</strong></td>
+                                                        <td>Keempat paragraf lengkap dan runtut</td>
+                                                        <td>Satu bagian kurang jelas</td>
+                                                        <td>Dua bagian kurang</td>
+                                                        <td>Struktur tidak tampak</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Kualitas argumen</strong></td>
+                                                        <td>Argumen pro dan kontra logis, masing-masing 2</td>
+                                                        <td>Argumen logis tetapi kurang dari 2</td>
+                                                        <td>Argumen kurang logis</td>
+                                                        <td>Argumen tidak relevan</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Dukungan bukti</strong></td>
+                                                        <td>Semua argumen disertai alasan/contoh</td>
+                                                        <td>Sebagian disertai bukti</td>
+                                                        <td>Bukti sangat sedikit</td>
+                                                        <td>Tanpa bukti</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Simpulan</strong></td>
+                                                        <td>Seimbang dan menawarkan solusi</td>
+                                                        <td>Seimbang tanpa solusi</td>
+                                                        <td>Memihak satu sisi</td>
+                                                        <td>Tidak ada simpulan</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Bahasa</strong></td>
+                                                        <td>Baku, kalimat efektif, ejaan tepat</td>
+                                                        <td>Sedikit kesalahan</td>
+                                                        <td>Banyak kesalahan</td>
+                                                        <td>Sulit dipahami</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <!-- Awal Rubrik Bagian E -->
+                                        <div class="section-badge-pill" style="margin-top: 14px;">3. Rubrik Bagian E (Penyampaian Argumen)</div>
+                                        <div class="table-card-wrapper">
+                                            <table class="lkpd-table rubric-matrix-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="width: 20%;">Kriteria</th>
+                                                        <th style="width: 20%;">4 (Sangat baik)</th>
+                                                        <th style="width: 20%;">3 (Baik)</th>
+                                                        <th style="width: 20%;">2 (Cukup)</th>
+                                                        <th style="width: 20%;">1 (Kurang)</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td><strong>Kejelasan</strong></td>
+                                                        <td>Suara dan lafal jelas, mudah dipahami</td>
+                                                        <td>Cukup jelas</td>
+                                                        <td>Kurang jelas</td>
+                                                        <td>Sulit dipahami</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Logika argumen</strong></td>
+                                                        <td>Argumen runtut dan didukung bukti</td>
+                                                        <td>Runtut, bukti kurang</td>
+                                                        <td>Kurang runtut</td>
+                                                        <td>Tidak logis</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
                                     <div class="page-corner-hint corner-left"></div>
                                 </div>
                             </div>
 
-                            <!-- Page 7 -->
+                            <!-- ==========================================
+                                 HALAMAN 7: Rubrik Lisan & Lembar Pengesahan
+                                 ========================================== -->
                             <div class="page" data-density="soft">
-                                <div class="page-content" id="page-content-7">
-                                    <div class="page-loading-skeleton" id="skeleton-7">
-                                        <div class="skeleton-spinner"></div>
-                                        <p class="skeleton-text">Memuat Halaman 7...</p>
+                                <div class="page-content storybook-page">
+                                    <div class="book-page-header">
+                                        <span class="header-tag">LKPD Evaluasi Teks Diskusi</span>
+                                        <span class="header-page-num">Halaman 7</span>
                                     </div>
-                                    <canvas id="pdf-canvas-7" class="page-canvas"></canvas>
+
+                                    <div class="rubric-section-wrapper">
+                                        <!-- Kelanjutan Rubrik Bagian E -->
+                                        <div class="section-badge-pill">Lanjutan Rubrik Bagian E (Penyampaian Argumen)</div>
+                                        <div class="table-card-wrapper">
+                                            <table class="lkpd-table rubric-matrix-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="width: 20%;">Kriteria</th>
+                                                        <th style="width: 20%;">4 (Sangat baik)</th>
+                                                        <th style="width: 20%;">3 (Baik)</th>
+                                                        <th style="width: 20%;">2 (Cukup)</th>
+                                                        <th style="width: 20%;">1 (Kurang)</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td><strong>Sikap kritis</strong></td>
+                                                        <td>Menanggapi argumen lawan dengan tepat</td>
+                                                        <td>Menanggapi, kurang tepat</td>
+                                                        <td>Menanggapi sedikit</td>
+                                                        <td>Tidak menanggapi</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Kesantunan</strong></td>
+                                                        <td>Santun sepanjang diskusi</td>
+                                                        <td>Santun, sesekali kurang</td>
+                                                        <td>Sering kurang santun</td>
+                                                        <td>Tidak santun</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <!-- Lembar Catatan Guru & Pengesahan -->
+                                        <div class="teacher-verification-card" style="margin-top: 18px;">
+                                            <div class="section-badge-pill">Lembar Penilaian & Verifikasi Guru</div>
+                                            <div class="scores-summary-grid">
+                                                <div class="score-input-item">
+                                                    <label>Skor Bagian A (Maks 20):</label>
+                                                    <input type="text" class="form-input score-box" placeholder="0 - 20">
+                                                </div>
+                                                <div class="score-input-item">
+                                                    <label>Skor Bagian B (Maks 20):</label>
+                                                    <input type="text" class="form-input score-box" placeholder="0 - 20">
+                                                </div>
+                                                <div class="score-input-item">
+                                                    <label>Skor Bagian C (Maks 15):</label>
+                                                    <input type="text" class="form-input score-box" placeholder="0 - 15">
+                                                </div>
+                                                <div class="score-input-item">
+                                                    <label>Skor Bagian D (Maks 25):</label>
+                                                    <input type="text" class="form-input score-box" placeholder="0 - 25">
+                                                </div>
+                                                <div class="score-input-item">
+                                                    <label>Skor Bagian E (Maks 20):</label>
+                                                    <input type="text" class="form-input score-box" placeholder="0 - 20">
+                                                </div>
+                                                <div class="score-input-item final-score-item">
+                                                    <label>Nilai Akhir (Total 100):</label>
+                                                    <input type="text" class="form-input score-box-final" placeholder="Total Skor">
+                                                </div>
+                                            </div>
+
+                                            <div class="teacher-feedback-field" style="margin-top: 14px;">
+                                                <label>Catatan dan Masukan Guru:</label>
+                                                <textarea class="essay-textarea" rows="3" placeholder="Tuliskan umpan balik untuk peserta didik..."></textarea>
+                                            </div>
+
+                                            <div class="signature-row" style="margin-top: 16px;">
+                                                <div class="sig-col">
+                                                    <p class="sig-label">Tanggal Penilaian:</p>
+                                                    <p class="sig-space">........................ 2026</p>
+                                                </div>
+                                                <div class="sig-col">
+                                                    <p class="sig-label">Tanda Tangan Guru:</p>
+                                                    <div class="sig-box-line"></div>
+                                                    <p class="sig-name">(..................................................)</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div class="page-corner-hint corner-right"></div>
                                 </div>
                             </div>
 
-                            <!-- Page 8 (Back Cover) -->
-                            <div class="page" data-density="hard">
-                                <div class="page-content" id="page-content-8">
-                                    <div class="page-loading-skeleton" id="skeleton-8">
-                                        <div class="skeleton-spinner"></div>
-                                        <p class="skeleton-text">Memuat Halaman 8...</p>
+                            <!-- ==========================================
+                                 HALAMAN 8: Pusat Kuis & Evaluasi Belajar Interaktif
+                                 (Kunci Jawaban Disembunyikan & Jadi Fitur Kuis)
+                                 ========================================== -->
+                            <div class="page page-cover-back" data-density="hard">
+                                <div class="page-content storybook-page">
+                                    <div class="book-page-header">
+                                        <span class="header-tag">LKPD Evaluasi Teks Diskusi</span>
+                                        <span class="header-page-num">Halaman 8</span>
                                     </div>
-                                    <canvas id="pdf-canvas-8" class="page-canvas"></canvas>
+
+                                    <div class="quiz-center-wrapper">
+                                        <div class="quiz-center-hero">
+                                            <div class="quiz-shield-icon">
+                                                <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                                                    <polyline points="9 12 11 14 15 10"/>
+                                                </svg>
+                                            </div>
+                                            <h3 class="quiz-center-title">G. Pusat Evaluasi Kuis & Refleksi Pemahaman</h3>
+                                            <p class="quiz-center-subtitle">Kunci jawaban tersimpan di sistem. Selesaikan soal pilihan ganda di halaman 2 dan 3, lalu periksa hasil kuis di bawah ini.</p>
+                                        </div>
+
+                                        <!-- Live Score Card -->
+                                        <div class="quiz-score-card" id="quiz-score-card">
+                                            <div class="score-card-header">
+                                                <span class="score-card-tag">STATUS KUIS EVALUASI</span>
+                                                <span class="score-timestamp" id="quiz-timestamp">Belum diperiksa</span>
+                                            </div>
+                                            <div class="score-main-display">
+                                                <div class="score-circle-display">
+                                                    <span class="score-number-big" id="quiz-score-val">0</span>
+                                                    <span class="score-number-denom">/ 100</span>
+                                                </div>
+                                                <div class="score-meta-details">
+                                                    <h4 class="score-status-title" id="quiz-status-title">Kuis Belum Diperiksa</h4>
+                                                    <p class="score-status-desc" id="quiz-status-desc">Silakan pilih jawaban pada nomor 1 sampai 5 di Halaman 2 dan 3, kemudian tekan tombol Periksa Hasil Kuis untuk mengukur pemahamanmu.</p>
+                                                </div>
+                                            </div>
+
+                                            <div class="quiz-action-buttons">
+                                                <button id="btn-check-quiz" class="btn btn-primary btn-check-action">
+                                                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                        <polyline points="20 6 9 17 4 12"/>
+                                                    </svg>
+                                                    <span>Periksa Hasil Kuis</span>
+                                                </button>
+                                                <button id="btn-reset-quiz" class="btn btn-outline">
+                                                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                                                        <path d="M3 3v5h5"/>
+                                                    </svg>
+                                                    <span>Ulangi Kuis</span>
+                                                </button>
+                                                <button id="btn-open-interactive-quiz" class="btn btn-outline">
+                                                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                        <rect x="2" y="3" width="20" height="14" rx="2"/>
+                                                        <line x1="8" y1="21" x2="16" y2="21"/>
+                                                        <line x1="12" y1="17" x2="12" y2="21"/>
+                                                    </svg>
+                                                    <span>Mode Kuis Terpandu</span>
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <!-- Rincian Pembahasan Terbuka Setelah Diperiksa -->
+                                        <div class="quiz-review-section" id="quiz-review-section">
+                                            <h4 class="review-title">Pembahasan & Analisis Jawaban Pilihan Ganda:</h4>
+                                            
+                                            <!-- Review Soal 1 -->
+                                            <div class="review-item" id="rev-item-1">
+                                                <div class="rev-header">
+                                                    <span class="rev-num">Soal 1:</span>
+                                                    <span class="rev-user-ans" id="rev-u-1">Jawabanmu: -</span>
+                                                    <span class="rev-badge" id="rev-badge-1">Belum dijawab</span>
+                                                </div>
+                                                <p class="rev-explanation"><strong>Kunci: B</strong>. Ciri utama teks diskusi adalah menyajikan dan memuat berbagai sudut pandang (pro dan kontra) terhadap suatu isu permasalahan yang aktual.</p>
+                                            </div>
+
+                                            <!-- Review Soal 2 -->
+                                            <div class="review-item" id="rev-item-2">
+                                                <div class="rev-header">
+                                                    <span class="rev-num">Soal 2:</span>
+                                                    <span class="rev-user-ans" id="rev-u-2">Jawabanmu: -</span>
+                                                    <span class="rev-badge" id="rev-badge-2">Belum dijawab</span>
+                                                </div>
+                                                <p class="rev-explanation"><strong>Kunci: C</strong>. Teks stimulus berfokus pada isu perdebatan mengenai perlu tidaknya siswa diizinkan membawa ponsel ke lingkungan sekolah.</p>
+                                            </div>
+
+                                            <!-- Review Soal 3 -->
+                                            <div class="review-item" id="rev-item-3">
+                                                <div class="rev-header">
+                                                    <span class="rev-num">Soal 3:</span>
+                                                    <span class="rev-user-ans" id="rev-u-3">Jawabanmu: -</span>
+                                                    <span class="rev-badge" id="rev-badge-3">Belum dijawab</span>
+                                                </div>
+                                                <p class="rev-explanation"><strong>Kunci: C</strong>. Pernyataan bahwa ponsel memudahkan siswa mencari referensi dan kamus daring merupakan argumen yang mendukung (pro) pemanfaatan ponsel sebagai alat belajar.</p>
+                                            </div>
+
+                                            <!-- Review Soal 4 -->
+                                            <div class="review-item" id="rev-item-4">
+                                                <div class="rev-header">
+                                                    <span class="rev-num">Soal 4:</span>
+                                                    <span class="rev-user-ans" id="rev-u-4">Jawabanmu: -</span>
+                                                    <span class="rev-badge" id="rev-badge-4">Belum dijawab</span>
+                                                </div>
+                                                <p class="rev-explanation"><strong>Kunci: B</strong>. Dalam konteks kalimat teks, kata "terpecah" bermakna perhatian siswa terbagi ke banyak hal sehingga konsentrasi belajar menjadi buyar/tidak fokus.</p>
+                                            </div>
+
+                                            <!-- Review Soal 5 -->
+                                            <div class="review-item" id="rev-item-5">
+                                                <div class="rev-header">
+                                                    <span class="rev-num">Soal 5:</span>
+                                                    <span class="rev-user-ans" id="rev-u-5">Jawabanmu: -</span>
+                                                    <span class="rev-badge" id="rev-badge-5">Belum dijawab</span>
+                                                </div>
+                                                <p class="rev-explanation"><strong>Kunci: D</strong>. Paragraf keempat menyajikan simpulan jalan tengah yang berimbang dan menawarkan solusi pengaturan penggunaan ponsel dengan izin guru.</p>
+                                            </div>
+                                        </div>
+
+                                        <!-- Panduan Penilaian Mandiri Soal Uraian -->
+                                        <div class="self-assessment-guide" style="margin-top: 14px;">
+                                            <h4 class="guide-title-mini">Panduan Penilaian Mandiri Soal Uraian (Soal 6 - 10)</h4>
+                                            <ul class="guide-steps-list">
+                                                <li><strong>Soal 6 (Skor Maks 8):</strong> Tiap argumen pro dan kontra yang tepat bernilai 1,5 poin (maksimal 3 pro dan 3 kontra). Tambahan 2 poin jika seluruh argumen ditempatkan pada kolom yang benar.</li>
+                                                <li><strong>Soal 7 (Skor Maks 6):</strong> Menjelaskan bahwa dampak ponsel bisa positif atau negatif bergantung cara dan aturan penggunaannya (3 poin), serta mengaitkan manfaat belajar dan risiko gangguan (3 poin).</li>
+                                                <li><strong>Soal 8 (Skor Maks 6):</strong> Sikap dinyatakan dengan tegas (2 poin) dan didukung 2 alasan logis yang berakar dari teks stimulus (4 poin).</li>
+                                                <li><strong>Soal 9 (Skor Maks 8):</strong> Analisis kritis apakah argumen guru BK cukup didukung data konkret atau perlu tambahan survei sekolah (8 poin).</li>
+                                                <li><strong>Soal 10 (Skor Maks 7):</strong> Evaluasi kredibilitas "data ilustrasi" serta rekomendasi sumber resmi yang kredibel (7 poin).</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
                                     <div class="page-corner-hint corner-left"></div>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -277,12 +1139,12 @@
                         <select id="page-select" class="page-select" title="Pilih Halaman Langsung" aria-label="Pilih Halaman">
                             <option value="0">Hal 1: Sampul Depan</option>
                             <option value="1">Hal 2: Teks Stimulus</option>
-                            <option value="2">Hal 3: Pilihan Ganda</option>
-                            <option value="3">Hal 4: Penilaian Uraian</option>
-                            <option value="4">Hal 5: Simulasi Diskusi</option>
-                            <option value="5">Hal 6: Pedoman Skor</option>
-                            <option value="6">Hal 7: Rubrik Lisan</option>
-                            <option value="7">Hal 8: Kunci Jawaban</option>
+                            <option value="2">Hal 3: Pilihan Ganda & Uraian B</option>
+                            <option value="3">Hal 4: Uraian C & Menulis D</option>
+                            <option value="4">Hal 5: Diskusi Kelompok & Refleksi</option>
+                            <option value="5">Hal 6: Pedoman Skor & Rubrik Menulis</option>
+                            <option value="6">Hal 7: Rubrik Lisan & Pengesahan</option>
+                            <option value="7">Hal 8: Pusat Kuis & Evaluasi</option>
                         </select>
                         <span class="page-count-text" id="page-indicator">Halaman 1 dari 8</span>
                     </div>
@@ -379,26 +1241,26 @@
                             <span class="toc-badge">Halaman 2</span>
                             <span class="toc-tag">Stimulus</span>
                         </div>
-                        <h3 class="toc-card-title">Teks Stimulus Diskusi</h3>
-                        <p class="toc-card-desc">Artikel stimulus isu perdebatan: Perlukah Siswa Membawa Ponsel ke Sekolah?</p>
+                        <h3 class="toc-card-title">Teks Stimulus & Kuis PG 1-3</h3>
+                        <p class="toc-card-desc">Artikel isu perdebatan: Perlukah Siswa Membawa Ponsel ke Sekolah?, serta soal pilihan ganda 1, 2, 3.</p>
                     </div>
 
                     <div class="toc-card" data-page="2">
                         <div class="toc-card-header">
                             <span class="toc-badge">Halaman 3</span>
-                            <span class="toc-tag">Soal PG</span>
+                            <span class="toc-tag">PG & Uraian</span>
                         </div>
-                        <h3 class="toc-card-title">Pilihan Ganda Bagian A</h3>
-                        <p class="toc-card-desc">Evaluasi pemahaman teks diskusi nomor 1 sampai 5 mengenai gagasan utama dan kosakata.</p>
+                        <h3 class="toc-card-title">Kuis PG 4-5 & Uraian Bagian B</h3>
+                        <p class="toc-card-desc">Soal pilihan ganda 4 dan 5, pengelompokan tabel pro/kontra, dan analisis makna penggunaan ponsel.</p>
                     </div>
 
                     <div class="toc-card" data-page="3">
                         <div class="toc-card-header">
                             <span class="toc-badge">Halaman 4</span>
-                            <span class="toc-tag">Uraian</span>
+                            <span class="toc-tag">Penilaian</span>
                         </div>
-                        <h3 class="toc-card-title">Penilaian Uraian Bagian B & C</h3>
-                        <p class="toc-card-desc">Telaah argumen kelompok pro dan kontra, analisis struktur, dan konjungsi pertentangan.</p>
+                        <h3 class="toc-card-title">Uraian Bagian C & Penulisan D</h3>
+                        <p class="toc-card-desc">Evaluasi kekuatan argumen kontra, analisis kredibilitas sumber data, serta tugas menulis teks diskusi 4 paragraf.</p>
                     </div>
 
                     <div class="toc-card" data-page="4">
@@ -406,8 +1268,8 @@
                             <span class="toc-badge">Halaman 5</span>
                             <span class="toc-tag">Aktivitas</span>
                         </div>
-                        <h3 class="toc-card-title">Simulasi Forum Diskusi</h3>
-                        <p class="toc-card-desc">Bagian D & E: Lembar persiapan kelompok 4-5 orang untuk simulasi debat forum lisan.</p>
+                        <h3 class="toc-card-title">Simulasi Diskusi & Refleksi</h3>
+                        <p class="toc-card-desc">Bahan persiapan forum debat kelompok, tabel refleksi pemahaman siswa, dan skor awal.</p>
                     </div>
 
                     <div class="toc-card" data-page="5">
@@ -415,8 +1277,8 @@
                             <span class="toc-badge">Halaman 6</span>
                             <span class="toc-tag">Pedoman</span>
                         </div>
-                        <h3 class="toc-card-title">Pedoman Penskoran Modul</h3>
-                        <p class="toc-card-desc">Tabel perhitungan skor maksimal bagian B, C, D, E beserta rubrik menulis teks diskusi.</p>
+                        <h3 class="toc-card-title">Pedoman Skor & Rubrik Menulis</h3>
+                        <p class="toc-card-desc">Tabel perhitungan skor maksimal 100 poin dan rubrik detail penilaian teks diskusi (skala 1-4).</p>
                     </div>
 
                     <div class="toc-card" data-page="6">
@@ -424,17 +1286,17 @@
                             <span class="toc-badge">Halaman 7</span>
                             <span class="toc-tag">Rubrik</span>
                         </div>
-                        <h3 class="toc-card-title">Rubrik Penyampaian Lisan</h3>
-                        <p class="toc-card-desc">Kriteria penilaian 1 sampai 4 untuk sikap kritis, kesantunan, kejelasan intonasi, dan kerja tim.</p>
+                        <h3 class="toc-card-title">Rubrik Lisan & Lembar Guru</h3>
+                        <p class="toc-card-desc">Kriteria penyampaian argumen lisan (sikap kritis & santun), catatan guru, dan tanda tangan penilai.</p>
                     </div>
 
                     <div class="toc-card" data-page="7">
                         <div class="toc-card-header">
                             <span class="toc-badge">Halaman 8</span>
-                            <span class="toc-tag">Kunci</span>
+                            <span class="toc-tag">Kuis</span>
                         </div>
-                        <h3 class="toc-card-title">Kunci Jawaban & Skoring</h3>
-                        <p class="toc-card-desc">Kunci jawaban resmi pilihan ganda, pedoman jawaban uraian, dan panduan konversi nilai akhir.</p>
+                        <h3 class="toc-card-title">Pusat Kuis & Evaluasi Hasil</h3>
+                        <p class="toc-card-desc">Pemeriksaan otomatis skor kuis pilihan ganda, pembahasan edukatif, serta panduan penskoran mandiri.</p>
                     </div>
                 </div>
             </div>
@@ -472,8 +1334,21 @@
                             </svg>
                         </div>
                         <div class="guide-text">
-                            <h4>Membalik Halaman</h4>
-                            <p>Klik tombol panah di sisi kiri/kanan, seret kursor pada sudut halaman buku, atau gunakan tombol navigasi di bilah bawah.</p>
+                            <h4>Format HTML Interaktif</h4>
+                            <p>Teks modul disusun menggunakan HTML dan CSS murni sehingga dapat dibaca dengan sangat jelas. Kamu dapat mengetik langsung pada kolom isian dan memilih jawaban pilihan ganda.</p>
+                        </div>
+                    </div>
+
+                    <div class="guide-item">
+                        <div class="guide-icon-box">
+                            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"/>
+                                <polyline points="12 6 12 12 16 14"/>
+                            </svg>
+                        </div>
+                        <div class="guide-text">
+                            <h4>Fitur Kuis & Penilaian Otomatis</h4>
+                            <p>Kunci jawaban disembunyikan dan diintegrasikan pada sistem evaluasi. Klik jawaban di Halaman 2 dan 3, lalu periksa nilaimu di Halaman 8 untuk memperoleh skor dan pembahasan otomatis.</p>
                         </div>
                     </div>
 
@@ -487,20 +1362,8 @@
                             </svg>
                         </div>
                         <div class="guide-text">
-                            <h4>Fitur Zoom & Pembesaran</h4>
-                            <p>Gunakan tombol (+) dan (-) di bilah bawah untuk memperbesar teks atau tabel yang detail. Klik badge persentase untuk mereset ke 100%.</p>
-                        </div>
-                    </div>
-
-                    <div class="guide-item">
-                        <div class="guide-icon-box">
-                            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
-                            </svg>
-                        </div>
-                        <div class="guide-text">
-                            <h4>Mode Layar Penuh</h4>
-                            <p>Klik ikon layar penuh di pojok kanan bawah untuk membaca tanpa gangguan. Tekan tombol Esc untuk keluar dari layar penuh.</p>
+                            <h4>Zoom & Layar Penuh</h4>
+                            <p>Gunakan tombol (+) dan (-) di bilah bawah untuk memperbesar teks atau tabel yang detail. Klik ikon layar penuh untuk pengalaman belajar yang fokus dan nyaman.</p>
                         </div>
                     </div>
 
@@ -513,10 +1376,49 @@
                         </div>
                         <div class="guide-text">
                             <h4>Pintasan Keyboard</h4>
-                            <p>Navigasi cepat dengan keyboard: Panah Kiri (mundur), Panah Kanan (maju), Home (halaman 1), End (halaman 8), serta tombol F (layar penuh).</p>
+                            <p>Navigasi cepat dengan keyboard: Panah Kiri (mundur), Panah Kanan (maju), Home (halaman 1), End (halaman 8), tombol F (layar penuh), serta tombol Esc untuk menutup modal.</p>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Interactive Guided Quiz Mode -->
+    <div class="modal-overlay" id="modal-interactive-quiz" aria-hidden="true" role="dialog" aria-labelledby="modal-quiz-title">
+        <div class="modal-container modal-quiz-stepper">
+            <div class="modal-header">
+                <div class="modal-title-wrap">
+                    <div class="modal-icon-badge">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="modal-title" id="modal-quiz-title">Mode Kuis Terpandu</h2>
+                        <span class="modal-subtitle-text" id="quiz-step-indicator">Soal 1 dari 5</span>
+                    </div>
+                </div>
+                <button class="btn-close-modal" id="btn-close-interactive-quiz" aria-label="Tutup kuis">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="modal-quiz-body-content">
+                    <!-- Dynamic Question View in Stepper -->
+                    <div class="stepper-q-box" id="stepper-q-container">
+                        <!-- Injected via JS -->
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer-quiz">
+                <button id="btn-quiz-prev-step" class="btn btn-outline" disabled>Sebelumnya</button>
+                <div class="stepper-progress-dots" id="quiz-dots-container"></div>
+                <button id="btn-quiz-next-step" class="btn btn-primary">Selanjutnya</button>
             </div>
         </div>
     </div>
@@ -531,44 +1433,16 @@
                 <div class="book-leaf leaf-right"></div>
             </div>
             <h3 class="loading-title">Menyiapkan Flipbook LKPD</h3>
-            <p class="loading-subtitle">Memproses 8 halaman modul evaluasi materi teks diskusi...</p>
+            <p class="loading-subtitle">Menyiapkan isi 8 halaman modul interaktif teks diskusi...</p>
             <div class="loading-bar-wrap">
                 <div class="loading-bar-fill" id="loading-progress-bar"></div>
             </div>
         </div>
     </div>
 
-    <!-- Error Notice Overlay -->
-    <div class="error-notice-overlay is-hidden" id="error-overlay">
-        <div class="error-card">
-            <div class="error-icon-box">
-                <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="#d9534f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="10"/>
-                    <line x1="12" y1="8" x2="12" y2="12"/>
-                    <line x1="12" y1="16" x2="12.01" y2="16"/>
-                </svg>
-            </div>
-            <h3 class="error-title">Gagal Memuat Dokumen PDF</h3>
-            <p class="error-desc" id="error-message">Terjadi kendala saat membaca file modul.pdf. Pastikan file PDF tersedia di direktori assets.</p>
-            <div class="error-actions">
-                <button id="btn-retry-load" class="btn btn-primary">Muat Ulang Halaman</button>
-                <a href="assets/modul.pdf" download class="btn btn-outline">Unduh PDF Langsung</a>
-            </div>
-        </div>
-    </div>
-
-    <!-- External Libraries via CDN -->
-    <!-- PDF.js CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-    <!-- StPageFlip CDN -->
+    <!-- StPageFlip CDN with Fallback -->
     <script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.js"></script>
-
-    <!-- Fallback check for offline/blocked CDN environments -->
     <script>
-        if (!window.pdfjsLib) {
-            console.warn('PDF.js CDN utama tidak dapat diakses, mencoba CDN alternatif...');
-            document.write('<script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"><\/script>');
-        }
         if (!window.St || !window.St.PageFlip) {
             console.warn('StPageFlip CDN utama tidak dapat diakses, mencoba CDN alternatif...');
             document.write('<script src="https://unpkg.com/page-flip@2.0.7/dist/js/page-flip.browser.js"><\/script>');
